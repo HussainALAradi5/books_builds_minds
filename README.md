@@ -48,9 +48,9 @@
 
 ### UML Diagrams:
 
-#### [hierarchy]()
+#### [hierarchy](./images/Books_Builds_Minds-Hierarchy_diagram.drawio.png)
 
-#### [UML_Diagram]()
+#### [UML_Diagram](./images/Books_Builds_Minds-UML_Diagram.drawio.png)
 
 ---
 
