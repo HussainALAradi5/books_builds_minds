@@ -1,7 +1,8 @@
 from config import db
 class User(db.Model):
-    id=db.Column(db.Integer,primary_key=True)
+    user_id=db.Column(db.Integer,primary_key=True)
     user_name=db.Column(db.String,unique=True,nullable=False)
+    user_image=db.Column(db.String,nullable=False)
     password_digest=db.Column(db.String,nullable=False)
     email=db.Column(db.String,unique=True,nullable=False)
     is_admin=db.Column(db.Boolean,default=False)
@@ -9,6 +10,7 @@ class User(db.Model):
 
 class Book(db.Model):
     isbn = db.Column(db.Integer, primary_key=True) 
+    book_image=db.Column(db.String,nullable=False)
     title = db.Column(db.String, unique=True, nullable=False)  
     author = db.Column(db.String, nullable=False)  
     publisher = db.Column(db.String, nullable=False) 
@@ -16,14 +18,22 @@ class Book(db.Model):
     reviews = db.relationship('BookReview', backref='book', lazy=True)  
 
 class BookReview(db.Model):
-    id = db.Column(db.Integer, primary_key=True)  
+    review_id = db.Column(db.Integer, primary_key=True)  
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False) 
     written_time = db.Column(db.DateTime, default=datetime.utcnow)
     last_edit = db.Column(db.DateTime) 
     book_id = db.Column(db.Integer, db.ForeignKey('book.isbn'), nullable=False)
      
+class Receipt(db.Model):
+    receipt_id = db.Column(db.Integer, primary_key=True)  
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False) 
+    written_time = db.Column(db.DateTime, default=datetime.utcnow)
+    book_id = db.Column(db.Integer, db.ForeignKey('book.isbn'), nullable=False)
+    written_time = db.Column(db.DateTime, default=datetime.utcnow)
+
+
 class AdminRequest(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    request_id = db.Column(db.Integer, primary_key=True)
     is_acceoted=db.Column(db.Boolean)
     review_time=db.Column(db.DataTime)
     reviewed_by_user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
