@@ -12,7 +12,7 @@ class User(db.Model):
     email = Column(String, unique=True, nullable=False)
     is_admin = Column(Boolean, default=False)
     is_active = Column(Boolean, default=True)
-    purchased_books = db.Column(Text, nullable=True)  # Use Text to store JSON
+    purchased_books = db.Column(Text, nullable=True)  
 
     def to_dict(self):
         return {
