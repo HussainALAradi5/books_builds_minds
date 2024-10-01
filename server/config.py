@@ -13,12 +13,12 @@ CORS(app)
 url = os.getenv('DATABASE_URL')
 secret_key = os.getenv('SECRET_KEY')
 
-
+key=os.getenv('JWT_SECRET_KEY', secret_key)  
 
 
 app.config["SQLALCHEMY_DATABASE_URI"] = url
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False  
-app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', secret_key)  
+app.config['JWT_SECRET_KEY'] = key
 
 db = SQLAlchemy(app)
 
