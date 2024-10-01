@@ -1,7 +1,9 @@
-
+# User.py
 from sqlalchemy import Column, Integer, String, Boolean
-from config import db  
-class User(db.Model):  
+from config import db
+from UserBook import UserBook  
+
+class User(db.Model):
     __tablename__ = 'users'
 
     user_id = Column(Integer, primary_key=True)
@@ -12,6 +14,9 @@ class User(db.Model):
     is_admin = Column(Boolean, default=False)
     is_active = Column(Boolean, default=True)
 
+
+    books = db.relationship('UserBook', backref='user', lazy=True)
+
     def to_dict(self):
         return {
             'user_id': self.user_id,
@@ -20,4 +25,5 @@ class User(db.Model):
             'email': self.email,
             'is_admin': self.is_admin,
             'is_active': self.is_active,
+            'books': [book.book.title for book in self.books] 
         }
