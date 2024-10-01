@@ -3,8 +3,11 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token, JWTManager, jwt_required, get_jwt_identity
 from models.User import User
 from models.Book import Book
+from models.BookReview import BookReview
+from models.Receipt import Receipt
 from config import db, app
 import json
+from datetime import datetime
 
 jwt = JWTManager(app)
 
@@ -116,7 +119,9 @@ def purchase_book(isbn):
     if user.user_id in book.get_purchased_by():
         return error_response('You already own this book.', 409)
 
-    purchased_books = user.get_purchased_books()
+    create_receipt(user_id, isbn)
+
+    purchased_books = user.purchased_books()
     purchased_books.append(book.isbn)
     user.purchased_books = json.dumps(purchased_books)
 
@@ -185,3 +190,91 @@ def remove_book(isbn):
     db.session.commit()
     
     return jsonify({'message': 'Book removed successfully!'}), 200
+
+@jwt_required()
+def add_review(isbn):
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
+
+    if not user:
+        return error_response('User not found.', 404)
+
+    purchased_books = json.loads(user.purchased_books)
+    if isbn not in purchased_books:
+        return error_response('You must purchase this book to review it.', 403)
+
+    data = request.get_json()
+   
+    if 'review_text' not in data:
+        return error_response('Missing review content.', 400)
+
+    new_review = BookReview(
+        user_id=user_id,
+        book_id=isbn,
+        review_text=data['review_text'],  
+        written_time=datetime.utcnow(),
+        last_edit=datetime.utcnow()
+    )
+
+    db.session.add(new_review)
+    db.session.commit()
+    return jsonify({'message': 'Review added successfully!'}), 201
+
+@jwt_required()
+def edit_review(isbn, review_id):
+    user_id = get_jwt_identity()
+    review = BookReview.query.get(review_id)
+
+    if not review or review.book_id != isbn:
+        return error_response('Review not found.', 404)
+
+    if review.user_id != user_id:
+        return error_response('You can only edit your own reviews.', 403)
+
+    data = request.get_json()
+
+    if 'review_text' in data:
+        review.review_text = data['review_text']
+
+    review.last_edit = datetime.utcnow()
+
+    db.session.commit()
+    return jsonify({'message': 'Review updated successfully!'}), 200
+
+@jwt_required()
+def remove_review(isbn, review_id):
+    user_id = get_jwt_identity()
+    review = BookReview.query.get(review_id)
+
+    if not review or review.book_id != isbn:
+        return error_response('Review not found.', 404)
+
+    if review.user_id != user_id:
+        return error_response('You can only delete your own reviews.', 403)
+
+    db.session.delete(review)
+    db.session.commit()
+    return jsonify({'message': 'Review removed successfully!'}), 200
+
+@jwt_required()
+def view_review(isbn, review_id):
+    review = BookReview.query.get(review_id)
+
+    if not review or review.book_id != isbn:
+        return error_response('Review not found.', 404)
+
+    return jsonify(review.to_dict()), 200
+
+def create_receipt(user_id, book_id):
+    existing_receipt = Receipt.query.filter_by(user_id=user_id, book_id=book_id).first()
+    if existing_receipt:
+        return error_response('Receipt already exists for this purchase.', 409)
+
+    new_receipt = Receipt(user_id=user_id, book_id=book_id)
+    db.session.add(new_receipt)
+    db.session.commit()
+    return jsonify({'message': 'Receipt created successfully!'}), 201
+
+def view_purchase_history(user_id):
+    receipts = Receipt.query.filter_by(user_id=user_id).all()
+    return jsonify([receipt.to_dict() for receipt in receipts]), 200
