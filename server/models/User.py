@@ -1,9 +1,8 @@
-# User.py
-from sqlalchemy import Column, Integer, String, Boolean
-from config import db
-from UserBook import UserBook  
+from sqlalchemy import Column, Integer, String, Boolean, Text
+from config import db  
+import json
 
-class User(db.Model):
+class User(db.Model):  
     __tablename__ = 'users'
 
     user_id = Column(Integer, primary_key=True)
@@ -13,9 +12,7 @@ class User(db.Model):
     email = Column(String, unique=True, nullable=False)
     is_admin = Column(Boolean, default=False)
     is_active = Column(Boolean, default=True)
-
-
-    books = db.relationship('UserBook', backref='user', lazy=True)
+    purchased_books = db.Column(Text, nullable=True)  # Use Text to store JSON
 
     def to_dict(self):
         return {
@@ -25,5 +22,10 @@ class User(db.Model):
             'email': self.email,
             'is_admin': self.is_admin,
             'is_active': self.is_active,
-            'books': [book.book.title for book in self.books] 
+            'purchased_books': self.get_purchased_books()  
         }
+
+    def get_purchased_books(self):
+        if self.purchased_books:
+            return json.loads(self.purchased_books)  
+        return []
