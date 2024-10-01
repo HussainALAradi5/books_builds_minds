@@ -5,6 +5,7 @@ from models.User import User
 from models.Book import Book
 from models.BookReview import BookReview
 from models.Receipt import Receipt
+from models.AdminRequest import AdminRequest
 from config import db, app
 import json
 from datetime import datetime
@@ -278,3 +279,62 @@ def create_receipt(user_id, book_id):
 def view_purchase_history(user_id):
     receipts = Receipt.query.filter_by(user_id=user_id).all()
     return jsonify([receipt.to_dict() for receipt in receipts]), 200
+@jwt_required()
+def respond_to_request(request_id):
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
+
+    if not user or not user.is_admin:
+        return error_response('Admin privileges required to respond to requests.', 403)
+
+    data = request.get_json()
+    request_to_respond = AdminRequest.query.get(request_id)
+
+    if not request_to_respond:
+        return error_response('Request not found.', 404)
+
+    
+    request_to_respond.is_accepted = data.get('is_accepted', False)
+    request_to_respond.review_time = datetime.utcnow()
+    request_to_respond.reviewed_by_user_id = user_id
+    request_to_respond.reviewed_by_user_name = user.user_name
+
+    db.session.commit()
+
+    result = "accepted" if request_to_respond.is_accepted else "refused"
+    return jsonify({'message': f'Request {result} successfully by {user.user_name}.'}), 200
+@jwt_required()
+def get_all_requests():
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
+
+    if not user or not user.is_admin:
+        return error_response('Admin privileges required to view requests.', 403)
+
+    requests = AdminRequest.query.all()
+    return jsonify([request.to_dict() for request in requests]), 200
+@jwt_required()
+def create_request():
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
+
+    data = request.get_json()
+
+    # Ensure non-admins provide a reason for the request
+    if user.is_admin:
+        return error_response('Admin users cannot create requests.', 403)
+
+    if 'reason_for_request' not in data:
+        return error_response('Missing field: reason_for_request', 400)
+
+    new_request = AdminRequest(
+        reason_for_request=data['reason_for_request'],
+        user_id=user_id,
+        reviewed_by_user_id=None,
+        reviewed_by_user_name=None
+    )
+
+    db.session.add(new_request)
+    db.session.commit()
+    
+    return jsonify({'message': 'Request created successfully!'}), 201

@@ -10,6 +10,7 @@ class AdminRequest(db.Model):
     reviewed_by_user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))  
     reviewed_by_user_name = db.Column(db.String) 
     reason_for_request = db.Column(db.String)  
+    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))  
 
     def to_dict(self):
         return {
@@ -18,5 +19,6 @@ class AdminRequest(db.Model):
             'review_time': self.review_time.isoformat() if self.review_time else None,  
             'reviewed_by_user_id': self.reviewed_by_user_id,
             'reviewed_by_user_name': self.reviewed_by_user_name,
-            'reason_for_request': self.reason_for_request
+            'reason_for_request': self.reason_for_request,
+            'user_id': self.user_id
         }
