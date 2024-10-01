@@ -11,7 +11,7 @@ from auth import (
     add_book,
     edit_book,
     remove_book,
-    is_admin,
+    is_admin_or_error,
     view_purchase_history,
 )
 from flask_jwt_extended import jwt_required, get_jwt_identity
@@ -83,7 +83,7 @@ def handle_purchase_book(isbn):
 @app.route('/books', methods=['POST'])
 @jwt_required()
 def handle_add_book():
-    if not is_admin():
+    if not is_admin_or_error():
         return jsonify({"message": "Admin access required."}), 403
     try:
         data = request.get_json()
@@ -95,7 +95,7 @@ def handle_add_book():
 @app.route('/books/<int:isbn>', methods=['PUT'])
 @jwt_required()
 def handle_edit_book(isbn):
-    if not is_admin():
+    if not is_admin_or_error():
         return jsonify({"message": "Admin access required."}), 403
     try:
         data = request.get_json()
@@ -107,7 +107,7 @@ def handle_edit_book(isbn):
 @app.route('/books/<int:isbn>', methods=['DELETE'])
 @jwt_required()
 def handle_remove_book(isbn):
-    if not is_admin():
+    if not is_admin_or_error():
         return jsonify({"message": "Admin access required."}), 403
     try:
         return remove_book(isbn)

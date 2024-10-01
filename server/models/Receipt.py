@@ -5,7 +5,7 @@ class Receipt(db.Model):
     __tablename__ = 'receipts'
 
     receipt_id = db.Column(db.Integer, primary_key=True)  
-    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False) 
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False) 
     written_time = db.Column(db.DateTime, default=datetime.utcnow)  
     book_id = db.Column(db.Integer, db.ForeignKey('books.isbn'), nullable=False)  
 

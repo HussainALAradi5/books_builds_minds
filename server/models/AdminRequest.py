@@ -7,10 +7,10 @@ class AdminRequest(db.Model):
     request_id = db.Column(db.Integer, primary_key=True)
     is_accepted = db.Column(db.Boolean, default=False)  
     review_time = db.Column(db.DateTime)  
-    reviewed_by_user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))  
+    reviewed_by_user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))  
     reviewed_by_user_name = db.Column(db.String) 
     reason_for_request = db.Column(db.String)  
-    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))  
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))  
 
     def to_dict(self):
         return {

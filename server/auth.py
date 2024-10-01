@@ -16,11 +16,21 @@ def error_response(message, status_code):
     return jsonify({"message": message}), status_code
 
 def validate_user_data(data):
-    if 'user_or_email' not in data:
-        return jsonify({'message': 'Missing field: user_or_email'}), 400
-    if 'password' not in data:
-        return jsonify({'message': 'Missing field: password'}), 400
+    required_fields = ['user_or_email', 'password']
+    for field in required_fields:
+        if field not in data:
+            return error_response(f'Missing field: {field}', 400)
     return None
+
+def get_user_or_error(user_id):
+    user = User.query.get(user_id)
+    if not user:
+        raise ValueError('User not found.')
+    return user
+
+def is_admin_or_error(user):
+    if not user.is_admin:
+        raise ValueError('Admin privileges required.')
 
 def register():
     data = request.get_json()
@@ -67,11 +77,10 @@ def login():
 
     return error_response('Invalid username or password.', 401)
 
+@jwt_required()
 def edit_user(user_id):
     data = request.get_json()
-    user = User.query.get(user_id)
-    if not user:
-        return error_response('User not found.', 404)
+    user = get_user_or_error(user_id)
 
     if 'user_name' in data:
         user.user_name = data['user_name']
@@ -85,33 +94,23 @@ def edit_user(user_id):
     db.session.commit()
     return jsonify({'message': 'User information updated successfully!'}), 200
 
+@jwt_required()
 def delete_user(user_id):
-    user = User.query.get(user_id)
-    if not user:
-        return error_response('User not found.', 404)
+    user = get_user_or_error(user_id)
 
     user.is_active = False
     db.session.commit()
     return jsonify({'message': 'User account has been deactivated.'}), 200
 
+@jwt_required()
 def user_details(user_id):
-    user = User.query.get(user_id)
-    if not user:
-        return error_response('User not found.', 404)
-
+    user = get_user_or_error(user_id)
     return jsonify(user.to_dict()), 200
-
-def is_admin():
-    user_id = get_jwt_identity()
-    user = User.query.get(user_id)
-    return user.is_admin if user else False
 
 @jwt_required()
 def purchase_book(isbn):
     user_id = get_jwt_identity()
-    user = User.query.get(user_id)
-    if not user:
-        return error_response('User not found.', 404)
+    user = get_user_or_error(user_id)
 
     book = Book.query.get(isbn)
     if not book:
@@ -122,30 +121,27 @@ def purchase_book(isbn):
 
     create_receipt(user_id, isbn)
 
-    purchased_books = user.purchased_books()
+    # Update purchased_books and purchased_by
+    update_purchased_lists(user, book)
+
+    db.session.commit()
+    return jsonify({'message': 'Book purchased successfully!'}), 200
+
+def update_purchased_lists(user, book):
+    purchased_books = json.loads(user.purchased_books)
     purchased_books.append(book.isbn)
     user.purchased_books = json.dumps(purchased_books)
 
     purchased_by = book.get_purchased_by()
     purchased_by.append(user.user_id)
     book.purchased_by = json.dumps(purchased_by)
-
-    db.session.commit()
-    return jsonify({'message': 'Book purchased successfully!'}), 200
-
 @jwt_required()
-def view_book_details(isbn):
-    book = Book.query.get(isbn)
-    if not book:
-        return error_response('Book not found.', 404)
+def add_book():
+    user_id = get_jwt_identity()
+    user = get_user_or_error(user_id)
+    is_admin_or_error(user)
 
-    return jsonify(book.to_dict()), 200
-
-@jwt_required()
-def add_book(data):
-    if not is_admin():
-        return error_response('Admin privileges required to add a book.', 403)
-
+    data = request.get_json()
     new_book = Book(
         isbn=data['isbn'],
         book_image=data['book_image'],
@@ -155,16 +151,19 @@ def add_book(data):
         published_at=data['published_at'],
         price=data['price'],
     )
+
     db.session.add(new_book)
     db.session.commit()
     return jsonify({'message': 'Book added successfully!'}), 201
-
 @jwt_required()
-def edit_book(isbn, data):
-    if not is_admin():
-        return error_response('Admin privileges required to edit a book.', 403)
+def edit_book(isbn):
+    user_id = get_jwt_identity()
+    user = get_user_or_error(user_id)
+    is_admin_or_error(user)
 
+    data = request.get_json()
     book = Book.query.get(isbn)
+
     if not book:
         return error_response('Book not found.', 404)
 
@@ -177,11 +176,11 @@ def edit_book(isbn, data):
 
     db.session.commit()
     return jsonify({'message': 'Book edited successfully!'}), 200
-
 @jwt_required()
 def remove_book(isbn):
-    if not is_admin():
-        return error_response('Admin privileges required to remove a book.', 403)
+    user_id = get_jwt_identity()
+    user = get_user_or_error(user_id)
+    is_admin_or_error(user)
 
     book = Book.query.get(isbn)
     if not book:
@@ -189,23 +188,66 @@ def remove_book(isbn):
 
     db.session.delete(book)
     db.session.commit()
-    
     return jsonify({'message': 'Book removed successfully!'}), 200
+@jwt_required()
+def view_book_details(isbn):
+    book = Book.query.get(isbn)
+    if not book:
+        return error_response('Book not found.', 404)
+
+    return jsonify(book.to_dict()), 200
+
+@jwt_required()
+def manage_book(data, action, isbn=None):
+    user_id = get_jwt_identity()
+    user = get_user_or_error(user_id)
+    is_admin_or_error(user)
+
+    if action == 'add':
+        new_book = Book(
+            isbn=data['isbn'],
+            book_image=data['book_image'],
+            title=data['title'],
+            author=data['author'],
+            publisher=data['publisher'],
+            published_at=data['published_at'],
+            price=data['price'],
+        )
+        db.session.add(new_book)
+        message = 'Book added successfully!'
+    elif action == 'edit':
+        book = Book.query.get(isbn)
+        if not book:
+            return error_response('Book not found.', 404)
+        book.book_image = data.get('book_image', book.book_image)
+        book.title = data.get('title', book.title)
+        book.author = data.get('author', book.author)
+        book.publisher = data.get('publisher', book.publisher)
+        book.published_at = data.get('published_at', book.published_at)
+        book.price = data.get('price', book.price)
+        message = 'Book edited successfully!'
+    elif action == 'remove':
+        book = Book.query.get(isbn)
+        if not book:
+            return error_response('Book not found.', 404)
+        db.session.delete(book)
+        message = 'Book removed successfully!'
+    else:
+        return error_response('Invalid action.', 400)
+
+    db.session.commit()
+    return jsonify({'message': message}), 200
 
 @jwt_required()
 def add_review(isbn):
     user_id = get_jwt_identity()
-    user = User.query.get(user_id)
-
-    if not user:
-        return error_response('User not found.', 404)
+    user = get_user_or_error(user_id)
 
     purchased_books = json.loads(user.purchased_books)
     if isbn not in purchased_books:
         return error_response('You must purchase this book to review it.', 403)
 
     data = request.get_json()
-   
     if 'review_text' not in data:
         return error_response('Missing review content.', 400)
 
@@ -233,12 +275,10 @@ def edit_review(isbn, review_id):
         return error_response('You can only edit your own reviews.', 403)
 
     data = request.get_json()
-
     if 'review_text' in data:
         review.review_text = data['review_text']
 
     review.last_edit = datetime.utcnow()
-
     db.session.commit()
     return jsonify({'message': 'Review updated successfully!'}), 200
 
@@ -276,16 +316,16 @@ def create_receipt(user_id, book_id):
     db.session.commit()
     return jsonify({'message': 'Receipt created successfully!'}), 201
 
+@jwt_required()
 def view_purchase_history(user_id):
     receipts = Receipt.query.filter_by(user_id=user_id).all()
     return jsonify([receipt.to_dict() for receipt in receipts]), 200
+
 @jwt_required()
 def respond_to_request(request_id):
     user_id = get_jwt_identity()
-    user = User.query.get(user_id)
-
-    if not user or not user.is_admin:
-        return error_response('Admin privileges required to respond to requests.', 403)
+    user = get_user_or_error(user_id)
+    is_admin_or_error(user)
 
     data = request.get_json()
     request_to_respond = AdminRequest.query.get(request_id)
@@ -293,48 +333,19 @@ def respond_to_request(request_id):
     if not request_to_respond:
         return error_response('Request not found.', 404)
 
-    
     request_to_respond.is_accepted = data.get('is_accepted', False)
-    request_to_respond.review_time = datetime.utcnow()
-    request_to_respond.reviewed_by_user_id = user_id
-    request_to_respond.reviewed_by_user_name = user.user_name
+    request_to_respond.review = data.get('review', '')
+    request_to_respond.admin_id = user.user_id
+    request_to_respond.updated_at = datetime.utcnow()
 
     db.session.commit()
+    return jsonify({'message': 'Request response recorded successfully!'}), 200
 
-    result = "accepted" if request_to_respond.is_accepted else "refused"
-    return jsonify({'message': f'Request {result} successfully by {user.user_name}.'}), 200
 @jwt_required()
-def get_all_requests():
+def view_requests():
     user_id = get_jwt_identity()
-    user = User.query.get(user_id)
-
-    if not user or not user.is_admin:
-        return error_response('Admin privileges required to view requests.', 403)
+    user = get_user_or_error(user_id)
+    is_admin_or_error(user)
 
     requests = AdminRequest.query.all()
     return jsonify([request.to_dict() for request in requests]), 200
-@jwt_required()
-def create_request():
-    user_id = get_jwt_identity()
-    user = User.query.get(user_id)
-
-    data = request.get_json()
-
-    # Ensure non-admins provide a reason for the request
-    if user.is_admin:
-        return error_response('Admin users cannot create requests.', 403)
-
-    if 'reason_for_request' not in data:
-        return error_response('Missing field: reason_for_request', 400)
-
-    new_request = AdminRequest(
-        reason_for_request=data['reason_for_request'],
-        user_id=user_id,
-        reviewed_by_user_id=None,
-        reviewed_by_user_name=None
-    )
-
-    db.session.add(new_request)
-    db.session.commit()
-    
-    return jsonify({'message': 'Request created successfully!'}), 201

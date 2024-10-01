@@ -5,7 +5,7 @@ class BookReview(db.Model):
     __tablename__ = 'book_reviews'  
 
     review_id = db.Column(db.Integer, primary_key=True)  
-    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)  
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)  
     written_time = db.Column(db.DateTime, default=datetime.utcnow)  
     last_edit = db.Column(db.DateTime) 
     book_id = db.Column(db.Integer, db.ForeignKey('books.isbn'), nullable=False)  
