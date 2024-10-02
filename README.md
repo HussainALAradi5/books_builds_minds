@@ -36,6 +36,19 @@
 
 ### <b>for flask(server)</b>:
 
+optional:
+How to install postgresql?
+
+```
+1. Update Packages: sudo apt update
+2. Install PostgreSQL: sudo apt install postgresql postgresql-contrib
+3. Check Service Status: sudo systemctl status postgresql
+4. Access PostgreSQL: sudo -i -u postgres and psql
+5. Create Role (Optional): CREATE ROLE your_username WITH LOGIN PASSWORD 'your_password';
+6. Create Database (Optional): CREATE DATABASE your_database_name OWNER your_username;
+7. Exit: \q
+```
+
 1. how to start the database(Postgresql)?
 
 ```
@@ -89,9 +102,18 @@ pip install -r requirements.txt
 
 ### UML Diagrams:
 
-### [hierarchy](./images/Books_Builds_Minds-Hierarchy_diagram.drawio.png)
+<details>
+<summary>UML Diagram</summary>
 
-### [UML_Diagram](./images/Books_Builds_Minds-UML_Diagram.drawio.png)
+![UML Diagram ](./images/Books_Builds_Minds-UML_Diagram.drawio.png)
+
+</details>
+<details>
+<summary>Hierarchy Diagram </summary>
+
+![Hierarchy Diagram](./images/Books_Builds_Minds-Hierarchy_diagram.drawio.png)
+
+</details>
 
 ---
 
