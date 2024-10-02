@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String, Boolean, Numeric, Date, Text
-from config import db  
+from sqlalchemy.orm import relationship
+from config import db
 import json
 
 class Book(db.Model):
@@ -14,6 +15,9 @@ class Book(db.Model):
     price = db.Column(db.Numeric(10, 2), default=0.00)
     purchased_by = db.Column(Text, nullable=True)  
 
+    # Relationship to BookReview
+    reviews = relationship("BookReview", back_populates="book", cascade="all, delete-orphan")
+
     def to_dict(self):
         return {
             'isbn': self.isbn,
@@ -23,7 +27,8 @@ class Book(db.Model):
             'publisher': self.publisher,
             'published_at': self.published_at,  
             'price': self.price,
-            'purchased_by': self.get_purchased_by() 
+            'purchased_by': self.get_purchased_by(),
+            'reviews': [review.to_dict() for review in self.reviews]  
         }
 
     def get_purchased_by(self):

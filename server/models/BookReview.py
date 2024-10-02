@@ -1,5 +1,6 @@
 from datetime import datetime
-from config import db  
+from config import db
+from sqlalchemy.orm import relationship
 
 class BookReview(db.Model):
     __tablename__ = 'book_reviews'  
@@ -10,6 +11,9 @@ class BookReview(db.Model):
     last_edit = db.Column(db.DateTime) 
     book_id = db.Column(db.Integer, db.ForeignKey('books.isbn'), nullable=False)  
     rating = db.Column(db.Integer, nullable=False)  
+
+ 
+    book = relationship("Book", back_populates="reviews")
 
     def to_dict(self):
         return {
