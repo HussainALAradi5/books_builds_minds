@@ -16,7 +16,7 @@ from auth import (
 )
 from flask_jwt_extended import jwt_required, get_jwt_identity
 import logging
-
+from flask_cors import CORS
 logging.basicConfig(level=logging.INFO)
 
 @app.route('/register', methods=['POST'])
@@ -157,6 +157,7 @@ def handle_view_purchase_history():
     user_id = get_jwt_identity()
     return view_purchase_history(user_id)
 
+CORS(app)
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()

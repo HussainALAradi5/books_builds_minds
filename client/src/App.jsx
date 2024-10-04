@@ -1,7 +1,12 @@
-import './App.css'
+import { ChakraProvider } from '@chakra-ui/react'
+import MainContainer from './components/MainContainer'
 
 function App() {
-  return <div className="app"></div>
+  return (
+    <ChakraProvider>
+      <MainContainer />
+    </ChakraProvider>
+  )
 }
 
 export default App

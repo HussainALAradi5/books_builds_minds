@@ -35,6 +35,7 @@ def is_admin_or_error(user):
 def register():
     data = request.get_json()
     validation_error = validate_user_data(data)
+    print(data)
     if validation_error:
         return validation_error
 
@@ -61,6 +62,7 @@ def register():
 def login():
     data = request.get_json()
     validation_error = validate_user_data(data)
+    print(data)
     if validation_error:
         return validation_error
 
