@@ -7,6 +7,7 @@ import {
   useColorMode
 } from '@chakra-ui/react'
 import { useState } from 'react'
+import { useDropzone } from 'react-dropzone'
 import { authenticate, setUserToken, setUserData } from '../services/auth'
 import Button from '../components/Button'
 import Notifications from './Notifications'
@@ -17,7 +18,8 @@ const Form = ({ isRegister }) => {
     user_name_or_email: '',
     password: '',
     email: '',
-    user_name: ''
+    user_name: '',
+    user_image: null
   })
 
   const [notification, setNotification] = useState({
@@ -33,11 +35,25 @@ const Form = ({ isRegister }) => {
     })
   }
 
+  const onDrop = (acceptedFiles) => {
+    const file = acceptedFiles[0]
+    setFormData((prevState) => ({
+      ...prevState,
+      user_image: file // Store the file in form data
+    }))
+  }
+
   const handleSubmit = async (event) => {
     event.preventDefault()
 
+    // Create a FormData object to send the file
+    const dataToSend = new FormData()
+    for (const key in formData) {
+      dataToSend.append(key, formData[key])
+    }
+
     try {
-      const response = await authenticate(formData, isRegister)
+      const response = await authenticate(dataToSend, isRegister)
       setNotification({
         title: isRegister ? 'Registration Successful' : 'Login Successful',
         description: '',
@@ -97,6 +113,8 @@ const Form = ({ isRegister }) => {
     variant: 'flushed'
   }
 
+  const { getRootProps, getInputProps } = useDropzone({ onDrop })
+
   return (
     <Box {...boxStyle}>
       <Heading {...headingStyle}>{isRegister ? 'Register' : 'Login'}</Heading>
@@ -120,6 +138,19 @@ const Form = ({ isRegister }) => {
               placeholder="Enter your email"
               {...inputStyle}
             />
+            <FormLabel {...formLabelStyle}>User Image</FormLabel>
+            <Box
+              {...getRootProps()}
+              border="2px dashed"
+              p={4}
+              textAlign="center"
+              mb={4}
+            >
+              <input {...getInputProps()} />
+              <p>
+                Drag 'n' drop your profile image here, or click to select one
+              </p>
+            </Box>
           </>
         )}
         {!isRegister && (

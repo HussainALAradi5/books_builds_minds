@@ -5,6 +5,7 @@ console.log('API URL:', API_URL)
 const register = async (data) => {
   try {
     const response = await axios.post(`${API_URL}/register`, data)
+    console.log('resonse:', response)
     return response.data
   } catch (error) {
     throw new Error(
