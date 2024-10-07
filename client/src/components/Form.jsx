@@ -6,7 +6,7 @@ import {
   Heading,
   useColorMode,
   Avatar,
-  Text // Import Text for error messages
+  Text
 } from '@chakra-ui/react'
 import { useState } from 'react'
 import { useDropzone } from 'react-dropzone'
@@ -21,7 +21,7 @@ const Form = ({ isRegister }) => {
     password: '',
     email: '',
     user_name: '',
-    user_image: null // Store uploaded image here
+    user_image: null
   })
 
   const [notification, setNotification] = useState({
@@ -44,19 +44,18 @@ const Form = ({ isRegister }) => {
       setErrorMessage('Only image files are accepted.')
       return
     }
-    
+
     const file = acceptedFiles[0]
     setFormData((prevState) => ({
       ...prevState,
-      user_image: file // Store the file in form data
+      user_image: file
     }))
-    setErrorMessage('') // Clear error message on successful drop
+    setErrorMessage('')
   }
 
   const handleSubmit = async (event) => {
     event.preventDefault()
 
-    // Create a FormData object to send the file
     const dataToSend = new FormData()
     for (const key in formData) {
       dataToSend.append(key, formData[key])
@@ -123,10 +122,10 @@ const Form = ({ isRegister }) => {
     variant: 'flushed'
   }
 
-  const { getRootProps, getInputProps } = useDropzone({ 
-    onDrop, 
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop,
     accept: {
-      'image/*': [] // Only accept image files
+      'image/*': []
     }
   })
 
@@ -153,7 +152,9 @@ const Form = ({ isRegister }) => {
               placeholder="Enter your email"
               {...inputStyle}
             />
-            <FormLabel {...formLabelStyle}>User Image</FormLabel>
+            <FormLabel {...formLabelStyle}>
+              User Image(this is optional)
+            </FormLabel>
             <Box
               {...getRootProps()}
               border="2px dashed"
@@ -173,7 +174,11 @@ const Form = ({ isRegister }) => {
               <Avatar
                 size="xl"
                 name={formData.user_name || 'User'}
-                src={formData.user_image ? URL.createObjectURL(formData.user_image) : undefined}
+                src={
+                  formData.user_image
+                    ? URL.createObjectURL(formData.user_image)
+                    : undefined
+                }
               />
             </Box>
           </>
