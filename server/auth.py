@@ -14,6 +14,7 @@ from models.AdminRequest import AdminRequest
 from config import db, app
 import json
 from datetime import datetime
+from image import upload_image, read_image, update_image
 
 jwt = JWTManager(app)
 
@@ -54,7 +55,6 @@ def register():
         return validation_error
 
     user_name = data.get("user_name").lower()
-    user_image = data.get("user_image")
     password = data.get("password")
     email = data.get("email").lower()
 
@@ -64,9 +64,16 @@ def register():
         return error_response("User already exists!", 409)
 
     password_digest = generate_password_hash(password)
+
+    image_response = upload_image()
+    if image_response[1] != 201:
+        return image_response
+
+    uploaded_filename = image_response[0]["filename"]
+
     new_user = User(
         user_name=user_name,
-        user_image=user_image,
+        user_image=uploaded_filename,
         password_digest=password_digest,
         email=email,
     )
@@ -104,8 +111,15 @@ def edit_user(user_id):
 
     if "user_name" in data:
         user.user_name = data["user_name"]
-    if "user_image" in data:
-        user.user_image = data["user_image"]
+
+    if "user_image" in request.files: 
+        image_response = upload_image()
+        if image_response[1] != 201:  
+            return image_response  
+        user.user_image = image_response[0][
+            "filename"
+        ]  
+
     if "password" in data:
         user.password_digest = generate_password_hash(data["password"])
     if "email" in data:

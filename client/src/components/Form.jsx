@@ -4,7 +4,9 @@ import {
   FormLabel,
   Input,
   Heading,
-  useColorMode
+  useColorMode,
+  Avatar,
+  Text // Import Text for error messages
 } from '@chakra-ui/react'
 import { useState } from 'react'
 import { useDropzone } from 'react-dropzone'
@@ -19,7 +21,7 @@ const Form = ({ isRegister }) => {
     password: '',
     email: '',
     user_name: '',
-    user_image: null
+    user_image: null // Store uploaded image here
   })
 
   const [notification, setNotification] = useState({
@@ -28,6 +30,8 @@ const Form = ({ isRegister }) => {
     status: ''
   })
 
+  const [errorMessage, setErrorMessage] = useState('')
+
   const handleChange = (event) => {
     setFormData({
       ...formData,
@@ -35,12 +39,18 @@ const Form = ({ isRegister }) => {
     })
   }
 
-  const onDrop = (acceptedFiles) => {
+  const onDrop = (acceptedFiles, rejectedFiles) => {
+    if (rejectedFiles.length > 0) {
+      setErrorMessage('Only image files are accepted.')
+      return
+    }
+    
     const file = acceptedFiles[0]
     setFormData((prevState) => ({
       ...prevState,
       user_image: file // Store the file in form data
     }))
+    setErrorMessage('') // Clear error message on successful drop
   }
 
   const handleSubmit = async (event) => {
@@ -113,7 +123,12 @@ const Form = ({ isRegister }) => {
     variant: 'flushed'
   }
 
-  const { getRootProps, getInputProps } = useDropzone({ onDrop })
+  const { getRootProps, getInputProps } = useDropzone({ 
+    onDrop, 
+    accept: {
+      'image/*': [] // Only accept image files
+    }
+  })
 
   return (
     <Box {...boxStyle}>
@@ -150,6 +165,16 @@ const Form = ({ isRegister }) => {
               <p>
                 Drag 'n' drop your profile image here, or click to select one
               </p>
+            </Box>
+            {/* Display error message if there is one */}
+            {errorMessage && <Text color="red.500">{errorMessage}</Text>}
+            {/* Display the Avatar */}
+            <Box display="flex" justifyContent="center" mb={4}>
+              <Avatar
+                size="xl"
+                name={formData.user_name || 'User'}
+                src={formData.user_image ? URL.createObjectURL(formData.user_image) : undefined}
+              />
             </Box>
           </>
         )}
