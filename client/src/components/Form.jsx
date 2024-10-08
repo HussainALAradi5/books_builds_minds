@@ -54,6 +54,18 @@ const Form = ({ isRegister }) => {
       dataToSend.append(key, formData[key])
     }
 
+    // Debugging: Log the FormData
+    for (const [key, value] of dataToSend.entries()) {
+      console.log(key, value) // Log each key-value pair
+    }
+
+    // Check if user_image is set
+    if (!formData.user_image) {
+      console.error('No file uploaded')
+      setErrorMessage('Please upload a file.')
+      return // Prevent submission if no file
+    }
+
     try {
       const response = await authenticate(dataToSend, isRegister)
       setNotification({
