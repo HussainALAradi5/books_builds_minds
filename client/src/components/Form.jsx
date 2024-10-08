@@ -5,14 +5,13 @@ import {
   Input,
   Heading,
   useColorMode,
-  Avatar,
   Text
 } from '@chakra-ui/react'
 import { useState } from 'react'
-import { useDropzone } from 'react-dropzone'
 import { authenticate, setUserToken, setUserData } from '../services/auth'
 import Button from '../components/Button'
 import Notifications from './Notifications'
+import UserAvatar from './UserAvater'
 
 const Form = ({ isRegister }) => {
   const { colorMode } = useColorMode()
@@ -39,13 +38,7 @@ const Form = ({ isRegister }) => {
     })
   }
 
-  const onDrop = (acceptedFiles, rejectedFiles) => {
-    if (rejectedFiles.length > 0) {
-      setErrorMessage('Only image files are accepted.')
-      return
-    }
-
-    const file = acceptedFiles[0]
+  const handleImageUpload = (file) => {
     setFormData((prevState) => ({
       ...prevState,
       user_image: file
@@ -122,13 +115,6 @@ const Form = ({ isRegister }) => {
     variant: 'flushed'
   }
 
-  const { getRootProps, getInputProps } = useDropzone({
-    onDrop,
-    accept: {
-      'image/*': []
-    }
-  })
-
   return (
     <Box {...boxStyle}>
       <Heading {...headingStyle}>{isRegister ? 'Register' : 'Login'}</Heading>
@@ -153,34 +139,13 @@ const Form = ({ isRegister }) => {
               {...inputStyle}
             />
             <FormLabel {...formLabelStyle}>
-              User Image(this is optional)
+              User Image (this is optional)
             </FormLabel>
-            <Box
-              {...getRootProps()}
-              border="2px dashed"
-              p={4}
-              textAlign="center"
-              mb={4}
-            >
-              <input {...getInputProps()} />
-              <p>
-                Drag 'n' drop your profile image here, or click to select one
-              </p>
-            </Box>
-            {/* Display error message if there is one */}
+            <UserAvatar
+              name={formData.user_name || 'User'}
+              onImageUpload={handleImageUpload}
+            />
             {errorMessage && <Text color="red.500">{errorMessage}</Text>}
-            {/* Display the Avatar */}
-            <Box display="flex" justifyContent="center" mb={4}>
-              <Avatar
-                size="xl"
-                name={formData.user_name || 'User'}
-                src={
-                  formData.user_image
-                    ? URL.createObjectURL(formData.user_image)
-                    : undefined
-                }
-              />
-            </Box>
           </>
         )}
         {!isRegister && (
