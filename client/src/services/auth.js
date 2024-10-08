@@ -4,8 +4,10 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000'
 console.log('API URL:', API_URL)
 const register = async (data) => {
   try {
-    const response = await axios.post(`${API_URL}/register`, data)
-    console.log('resonse:', response)
+    const response = await axios.post(`${API_URL}/register`, data, {
+      headers: { 'Content-Type': 'application/json' }
+    })
+    console.log('response:', response)
     return response.data
   } catch (error) {
     throw new Error(
@@ -16,7 +18,9 @@ const register = async (data) => {
 
 const login = async (data) => {
   try {
-    const response = await axios.post(`${API_URL}/login`, data)
+    const response = await axios.post(`${API_URL}/login`, data, {
+      headers: { 'Content-Type': 'application/json' }
+    })
     return response.data
   } catch (error) {
     throw new Error(
