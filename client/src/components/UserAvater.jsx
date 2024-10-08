@@ -1,4 +1,4 @@
-import { Avatar, Box, Text, Button } from '@chakra-ui/react'
+import { Avatar, Box, Text } from '@chakra-ui/react'
 import { useDropzone } from 'react-dropzone'
 import { useState } from 'react'
 

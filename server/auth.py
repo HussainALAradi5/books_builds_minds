@@ -48,15 +48,16 @@ def is_admin_or_error(user):
 
 
 def register():
-    data = request.get_json()
-    validation_error = validate_user_data(data, is_register=True)
 
-    if validation_error:
-        return validation_error
+    user_name = request.form.get("user_name")
+    password = request.form.get("password")
+    email = request.form.get("email")
 
-    user_name = data.get("user_name").lower()
-    password = data.get("password")
-    email = data.get("email").lower()
+    if not user_name or not password or not email:
+        return error_response("Missing required fields.", 400)
+
+    user_name = user_name.lower()
+    email = email.lower()
 
     if User.query.filter(
         (User.user_name.ilike(user_name)) | (User.email.ilike(email))
@@ -112,13 +113,11 @@ def edit_user(user_id):
     if "user_name" in data:
         user.user_name = data["user_name"]
 
-    if "user_image" in request.files: 
+    if "user_image" in request.files:
         image_response = upload_image()
-        if image_response[1] != 201:  
-            return image_response  
-        user.user_image = image_response[0][
-            "filename"
-        ]  
+        if image_response[1] != 201:
+            return image_response
+        user.user_image = image_response[0]["filename"]
 
     if "password" in data:
         user.password_digest = generate_password_hash(data["password"])

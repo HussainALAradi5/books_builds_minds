@@ -2,10 +2,17 @@ import axios from 'axios'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000'
 console.log('API URL:', API_URL)
+
 const register = async (data) => {
   try {
-    const response = await axios.post(`${API_URL}/register`, data, {
-      headers: { 'Content-Type': 'application/json' }
+    const formData = new FormData()
+
+    Object.keys(data).forEach((key) => {
+      formData.append(key, data[key])
+    })
+
+    const response = await axios.post(`${API_URL}/register`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
     })
     console.log('response:', response)
     return response.data
