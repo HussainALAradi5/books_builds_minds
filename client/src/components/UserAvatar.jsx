@@ -11,7 +11,7 @@ const UserAvatar = ({ name, onImageUpload }) => {
     onDrop: (acceptedFiles) => {
       const file = acceptedFiles[0]
       setImage(file)
-      onImageUpload(file)
+      onImageUpload(file) // Call the parent handler to upload image
     }
   })
 

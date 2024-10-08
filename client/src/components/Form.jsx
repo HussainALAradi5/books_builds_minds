@@ -11,7 +11,7 @@ import { useState } from 'react'
 import { authenticate, setUserToken, setUserData } from '../services/auth'
 import Button from '../components/Button'
 import Notifications from './Notifications'
-import UserAvatar from './UserAvater'
+import UserAvatar from './UserAvatar'
 
 const Form = ({ isRegister }) => {
   const { colorMode } = useColorMode()
@@ -56,12 +56,6 @@ const Form = ({ isRegister }) => {
 
     for (const [key, value] of dataToSend.entries()) {
       console.log(key, value)
-    }
-
-    if (!formData.user_image) {
-      console.error('No file uploaded')
-      setErrorMessage('Please upload a file.')
-      return
     }
 
     try {
@@ -155,6 +149,7 @@ const Form = ({ isRegister }) => {
               name={formData.user_name || 'User'}
               onImageUpload={handleImageUpload}
             />
+
             {errorMessage && <Text color="red.500">{errorMessage}</Text>}
           </>
         )}
