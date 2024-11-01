@@ -8,7 +8,7 @@ class User(db.Model):
 
     user_id = Column(Integer, primary_key=True)
     user_name = Column(String, unique=True, nullable=False)
-    user_image = Column(String, nullable=False)
+    user_image = Column(String)
     password_digest = Column(String, nullable=False)
     email = Column(String, unique=True, nullable=False)
     is_admin = Column(Boolean, default=False)

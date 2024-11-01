@@ -48,7 +48,7 @@ def is_admin_or_error(user):
 
 
 def register():
-
+    validate_user_data(request.form, is_register=True)
     user_name = request.form.get("user_name")
     password = request.form.get("password")
     email = request.form.get("email")
