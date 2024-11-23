@@ -24,7 +24,6 @@ def error_response(message, status_code):
 
 
 def validate_user_data(data, is_register=False):
-    print(f"is_register:{is_register}")
     if is_register:
         required_fields = ["user_name", "email", "password"]
     else:
@@ -59,7 +58,6 @@ def register():
     user_name = data.get("user_name")
     password = data.get("password")
     email = data.get("email")
-    print(f"user_name:{user_name}, password:{password}, email:{email}")
 
     if not user_name or not password or not email:
         return error_response("Missing required fields.", 400)
@@ -97,7 +95,6 @@ def register():
 def login():
     data = request.get_json()
     validation_error = validate_user_data(data)
-    print(data)
     if validation_error:
         return validation_error
 

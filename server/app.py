@@ -53,7 +53,7 @@ def handle_delete(user_id):
         logging.error(f"Delete user error: {str(event)}")
         return jsonify({"message": "Delete user failed", "error": str(event)}), 500
 
-@app.route('/<int:user_id>/profile', methods=['GET'])
+@app.route('/user/<int:user_id>/profile', methods=['GET'])
 @jwt_required()
 def handle_user_details(user_id):
     try:

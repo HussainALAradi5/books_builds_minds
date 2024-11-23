@@ -54,8 +54,30 @@ const setUserData = (user) => {
   localStorage.setItem('user', JSON.stringify(user))
 }
 
-const getUserData = () => {
-  return JSON.parse(localStorage.getItem('user'))
+const getUserData = async () => {
+  const token = localStorage.getItem('token')
+  if (token) {
+    try {
+      // Decode the JWT to extract the user_id
+      const decodedToken = jwt_decode(token)
+      console.log('Decoded Token:', decodedToken)
+      const user_id = decodedToken.user_id // Adjust this according to the token's structure
+
+      // Fetch user profile from backend using the extracted user_id
+      const response = await axios.get(`${API_URL}/user/${user_id}/profile`, {
+        headers: {
+          'Authorization': `Bearer ${token}` // Include the token for authorization
+        }
+      })
+
+      console.log('User Profile:', response.data)
+      return response.data // This will be the user profile from the backend
+    } catch (error) {
+      console.error('Error fetching user data:', error)
+      return null
+    }
+  }
+  return null
 }
 
 const isLoggedIn = () => {
