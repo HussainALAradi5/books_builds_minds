@@ -2,8 +2,9 @@ import { Avatar, Box, Text } from '@chakra-ui/react'
 import { useDropzone } from 'react-dropzone'
 import { useState } from 'react'
 
-const UserAvatar = ({ name, onImageUpload }) => {
-  const [image, setImage] = useState(null)
+const UserAvatar = ({ name, onImageUpload, userImage }) => {
+  const [image, setImage] = useState(userImage || null)
+
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
       'image/*': []
@@ -14,6 +15,9 @@ const UserAvatar = ({ name, onImageUpload }) => {
       onImageUpload(file) // Call the parent handler to upload image
     }
   })
+
+  // Default avatar URL now points to the public folder
+  const defaultAvatarUrl = '/uploads/images/default_avatar.png' // Assuming the default image is in public/uploads/
 
   return (
     <Box display="flex" flexDirection="column" alignItems="center">
@@ -29,7 +33,7 @@ const UserAvatar = ({ name, onImageUpload }) => {
         <Avatar
           size="xl"
           name={name || 'User'}
-          src={image ? URL.createObjectURL(image) : undefined}
+          src={image ? URL.createObjectURL(image) : defaultAvatarUrl}
         />
         <Text mt={2}>
           {image ? 'Re-upload image' : 'Click or drag and drop to upload image'}

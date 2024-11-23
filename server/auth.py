@@ -49,50 +49,42 @@ def is_admin_or_error(user):
 
 
 def register():
-    
     if request.is_json:
         data = request.get_json()
     else:
-       
         data = request.form
 
-    
     validate_user_data(data, is_register=True)
 
-    
     user_name = data.get("user_name")
     password = data.get("password")
     email = data.get("email")
     print(f"user_name:{user_name}, password:{password}, email:{email}")
 
-   
     if not user_name or not password or not email:
         return error_response("Missing required fields.", 400)
 
-    
     user_name = user_name.lower()
     email = email.lower()
 
-    
     if User.query.filter(
         (User.user_name.ilike(user_name)) | (User.email.ilike(email))
     ).first():
         return error_response("User already exists!", 409)
 
-   
     password_digest = generate_password_hash(password)
 
-   
     uploaded_filename = None
-    if 'user_image' in data:
-        image_response = upload_image()
+    if 'user_image' in request.files:
+        image_response = upload_image()  
         if image_response[1] != 201:
             return image_response
         uploaded_filename = image_response[0]["filename"]
 
+ 
     new_user = User(
         user_name=user_name,
-        user_image=uploaded_filename,
+        user_image=uploaded_filename,  
         password_digest=password_digest,
         email=email,
     )
@@ -175,7 +167,6 @@ def purchase_book(isbn):
 
     create_receipt(user_id, isbn)
 
-    # Update purchased_books and purchased_by
     update_purchased_lists(user, book)
 
     db.session.commit()

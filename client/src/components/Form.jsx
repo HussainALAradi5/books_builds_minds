@@ -51,18 +51,21 @@ const Form = ({ isRegister }) => {
 
     const dataToSend = new FormData()
 
-   
     for (const key in formData) {
-      dataToSend.append(key, formData[key])
+      if (key === 'user_image' && formData[key] !== null) {
+        dataToSend.append(key, formData[key])
+      } else if (key !== 'user_image') {
+        dataToSend.append(key, formData[key])
+      }
     }
 
-    for (const [key, value] of dataToSend.entries()) {
-      console.log(key, value)
+    // Check if user_image is null and send the default image if necessary
+    if (!formData.user_image) {
+      dataToSend.append('user_image', '/uploads/images/default_avatar.png') // Using the path relative to public folder
     }
 
     try {
-      
-      const response = await authenticate(formData, isRegister) 
+      const response = await authenticate(formData, isRegister)
       setNotification({
         title: isRegister ? 'Registration Successful' : 'Login Successful',
         description: '',
@@ -87,6 +90,7 @@ const Form = ({ isRegister }) => {
       })
     }
   }
+
   const boxStyle = {
     maxWidth: '400px',
     mx: 'auto',
@@ -150,6 +154,7 @@ const Form = ({ isRegister }) => {
             <UserAvatar
               name={formData.user_name || 'User'}
               onImageUpload={handleImageUpload}
+              userImage={formData.user_image} // Pass the image here
             />
 
             {errorMessage && <Text color="red.500">{errorMessage}</Text>}
