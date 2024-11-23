@@ -51,7 +51,7 @@ const Form = ({ isRegister }) => {
 
     const dataToSend = new FormData()
 
-    // Append form data to FormData object if there's a file
+   
     for (const key in formData) {
       dataToSend.append(key, formData[key])
     }
@@ -61,8 +61,8 @@ const Form = ({ isRegister }) => {
     }
 
     try {
-      // Determine whether to send FormData or JSON based on presence of file
-      const response = await authenticate(formData, isRegister) // Pass formData directly here
+      
+      const response = await authenticate(formData, isRegister) 
       setNotification({
         title: isRegister ? 'Registration Successful' : 'Login Successful',
         description: '',
