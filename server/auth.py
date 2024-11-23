@@ -28,7 +28,7 @@ def validate_user_data(data, is_register=False):
     if is_register:
         required_fields = ["user_name", "email", "password"]
     else:
-        required_fields = ["user_or_email", "password"]
+        required_fields = ["user_name_or_email", "password"]
 
     for field in required_fields:
         if field not in data:
@@ -109,7 +109,7 @@ def login():
     if validation_error:
         return validation_error
 
-    user_or_email = data.get("user_or_email").lower()
+    user_or_email = data.get("user_name_or_email").lower()
     password = data.get("password")
 
     user = User.query.filter(
