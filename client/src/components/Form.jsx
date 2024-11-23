@@ -50,6 +50,8 @@ const Form = ({ isRegister }) => {
     event.preventDefault()
 
     const dataToSend = new FormData()
+
+    // Append form data to FormData object if there's a file
     for (const key in formData) {
       dataToSend.append(key, formData[key])
     }
@@ -59,7 +61,8 @@ const Form = ({ isRegister }) => {
     }
 
     try {
-      const response = await authenticate(dataToSend, isRegister)
+      // Determine whether to send FormData or JSON based on presence of file
+      const response = await authenticate(formData, isRegister) // Pass formData directly here
       setNotification({
         title: isRegister ? 'Registration Successful' : 'Login Successful',
         description: '',
@@ -84,7 +87,6 @@ const Form = ({ isRegister }) => {
       })
     }
   }
-
   const boxStyle = {
     maxWidth: '400px',
     mx: 'auto',

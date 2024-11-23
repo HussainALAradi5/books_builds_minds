@@ -7,10 +7,21 @@ const register = async (data) => {
   try {
     const formData = new FormData()
 
-    Object.keys(data).forEach((key) => {
-      formData.append(key, data[key])
-    })
+    // Append all data to FormData if there's any file upload (like image)
+    if (data.user_image) {
+      Object.keys(data).forEach((key) => {
+        formData.append(key, data[key])
+      })
+    } else {
+      // If no file, send JSON data
+      const response = await axios.post(`${API_URL}/register`, data, {
+        headers: { 'Content-Type': 'application/json' }
+      })
+      console.log('response:', response)
+      return response.data
+    }
 
+    // If file present, send as multipart/form-data
     const response = await axios.post(`${API_URL}/register`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' }
     })

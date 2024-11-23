@@ -24,6 +24,7 @@ def error_response(message, status_code):
 
 
 def validate_user_data(data, is_register=False):
+    print(f"is_register:{is_register}")
     if is_register:
         required_fields = ["user_name", "email", "password"]
     else:
@@ -48,29 +49,46 @@ def is_admin_or_error(user):
 
 
 def register():
-    validate_user_data(request.form, is_register=True)
-    user_name = request.form.get("user_name")
-    password = request.form.get("password")
-    email = request.form.get("email")
+    
+    if request.is_json:
+        data = request.get_json()
+    else:
+       
+        data = request.form
 
+    
+    validate_user_data(data, is_register=True)
+
+    
+    user_name = data.get("user_name")
+    password = data.get("password")
+    email = data.get("email")
+    print(f"user_name:{user_name}, password:{password}, email:{email}")
+
+   
     if not user_name or not password or not email:
         return error_response("Missing required fields.", 400)
 
+    
     user_name = user_name.lower()
     email = email.lower()
 
+    
     if User.query.filter(
         (User.user_name.ilike(user_name)) | (User.email.ilike(email))
     ).first():
         return error_response("User already exists!", 409)
 
+   
     password_digest = generate_password_hash(password)
 
-    image_response = upload_image()
-    if image_response[1] != 201:
-        return image_response
-
-    uploaded_filename = image_response[0]["filename"]
+   
+    uploaded_filename = None
+    if 'user_image' in data:
+        image_response = upload_image()
+        if image_response[1] != 201:
+            return image_response
+        uploaded_filename = image_response[0]["filename"]
 
     new_user = User(
         user_name=user_name,
@@ -81,8 +99,8 @@ def register():
 
     db.session.add(new_user)
     db.session.commit()
-    return jsonify({"message": "User registered successfully!"}), 201
 
+    return jsonify({"message": "User registered successfully!"}), 201
 
 def login():
     data = request.get_json()
