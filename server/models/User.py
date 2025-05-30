@@ -4,7 +4,7 @@ import json
 
 
 class User(db.Model):
-    __tablename__ = "users"
+    __tablename__ = "user"
 
     user_id = Column(Integer, primary_key=True)
     user_name = Column(String, unique=True, nullable=False)
@@ -14,7 +14,7 @@ class User(db.Model):
     is_admin = Column(Boolean, default=False)
     is_active = Column(Boolean, default=True)
     purchased_books = db.Column(Text, nullable=True)
-
+    
     def to_dict(self):
         return {
             "user_id": self.user_id,
@@ -23,10 +23,10 @@ class User(db.Model):
             "email": self.email,
             "is_admin": self.is_admin,
             "is_active": self.is_active,
-            "purchased_books": self.get_purchased_books(),
+            # "purchased_books": self.get_purchased_books(),
         }
 
-    def get_purchased_books(self):
-        if self.purchased_books:
-            return json.loads(self.purchased_books)
-        return []
+    # def get_purchased_books(self):
+    #     if self.purchased_books:
+    #         return json.loads(self.purchased_books)
+    #     return []
