@@ -1,6 +1,6 @@
 # auth.py
-from models import User
-from config import db
+from models.User import User
+from config import app,db
 from flask import jsonify, request
 from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
@@ -42,8 +42,8 @@ def login_user():
     
     if not user or not check_password_hash(user.password_digest, password):
         return jsonify({"error": "Invalid credentials"}), 401
+    token = jwt.encode({"user_id": user.user_id},app.config["JWT_SECRET_KEY"], algorithm="HS256")
 
-    token = jwt.encode({"user_id": user.user_id}, SECRET_KEY, algorithm="HS256")
     return jsonify({"message": "Login successful", "token": token}), 200
 
 def validate_password(password):

@@ -23,10 +23,10 @@ class User(db.Model):
             "email": self.email,
             "is_admin": self.is_admin,
             "is_active": self.is_active,
-            # "purchased_books": self.get_purchased_books(),
+            "purchased_books": self.get_purchased_books(),
         }
 
-    # def get_purchased_books(self):
-    #     if self.purchased_books:
-    #         return json.loads(self.purchased_books)
-    #     return []
+    def get_purchased_books(self):
+        if self.purchased_books:
+            return json.loads(self.purchased_books)
+        return []
