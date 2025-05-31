@@ -40,7 +40,6 @@ def register_user():
 
     if not validate_password(password):
         return error_response("Password must contain at least 3 numbers and 5 letters", 400)
-    new_user = User(user_name=user_name, email=email, password_digest=generate_password_hash(password), user_image=data.get("user_image"))
     db.session.add(new_user)
     db.session.commit()
     return success_response("User registered successfully", 201)
@@ -75,8 +74,7 @@ def edit_user(user_id):
         if User.query.filter(User.email == new_email, User.user_id != user_id).first():
             return error_response("Email already exists", 400)
         user.email = new_email
-    if "user_image" in data:
-        user.user_image = data["user_image"]
+   
     if "is_admin" in data:
         user.is_admin = data["is_admin"] in ["true", "True", True]  # ✅ Convert properly
     if "password" in data:
