@@ -130,6 +130,19 @@ def purchase_book(book_id):
     db.session.commit()
     return jsonify({"message": "Book purchased successfully", "book": book.to_dict()}), 200
 
+# def get_purchased_books(user_id):
+#     token = request.headers.get("Authorization")
+#     user_id_from_token = validate_token(token)
+#     if not user_id_from_token:
+#         return error_response("Invalid or missing token", 401)
+#     if user_id != user_id_from_token:
+#         return error_response("Unauthorized: You can only view your own purchased books", 403)
+#     user = User.query.get(user_id)
+#     if not user:
+#         return error_response("User not found", 404)
+#     purchased_books = [book.to_dict() for book in user.purchased_books]
+#     return jsonify({"message": "Purchased books retrieved successfully", "books": purchased_books}), 200
+
 def get_purchased_books(user_id):
     token = request.headers.get("Authorization")
     user_id_from_token = validate_token(token)

@@ -1,7 +1,7 @@
-from sqlalchemy import Column, Integer, String, Text, Date, Float, ForeignKey, Table
+from sqlalchemy import Column, Integer, String, Date, Float, ForeignKey, Table
 from sqlalchemy.orm import relationship
 from config import db
-import json
+
 purchased_books_table = db.Table(
     "purchased_books",
     db.Column("user_id", Integer, ForeignKey("user.user_id")),
@@ -14,15 +14,18 @@ class Book(db.Model):
     book_id = Column(Integer, primary_key=True, autoincrement=True)
     isbn = Column(String, unique=True, nullable=False)
     book_image = Column(String, nullable=True)
-    title = Column(String, nullable=False)
+    title = Column(String, unique=True, nullable=False)
     author = Column(String, nullable=False)
     publisher = Column(String, nullable=False)
     published_at = Column(Date, nullable=False)
     price = Column(Float, nullable=False)
-    reviews = Column(Text, nullable=True)
     added_by_user_id = Column(Integer, ForeignKey("user.user_id"), nullable=False)
+
     added_by_user = relationship("User", backref="added_books")
     purchased_by_users = relationship("User", secondary=purchased_books_table, backref="purchased_books_list")
+
+    # ✅ Change direct reference to string: "Review"
+    reviews = relationship("Review", back_populates="book", cascade="all, delete-orphan")
 
     def to_dict(self):
         return {
@@ -34,10 +37,7 @@ class Book(db.Model):
             "publisher": self.publisher,
             "published_at": str(self.published_at),
             "price": self.price,
-            "reviews": self.get_reviews(),
+            "reviews": [review.to_dict() for review in self.reviews],  
             "added_by_user_id": self.added_by_user_id,
-            "purchased_by": [user.user_id for user in self.purchased_by_users] 
+            "purchased_by": [user.user_id for user in self.purchased_by_users],
         }
-
-    def get_reviews(self):
-        return json.loads(self.reviews) if self.reviews else []
