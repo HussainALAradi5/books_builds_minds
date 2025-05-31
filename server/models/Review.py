@@ -1,6 +1,5 @@
-from sqlalchemy import Column, Integer,  Date, Float, ForeignKey
+from sqlalchemy import Column, Integer, Date, Float, ForeignKey
 from sqlalchemy.orm import relationship
-
 from config import db
 
 class Review(db.Model):
@@ -11,9 +10,10 @@ class Review(db.Model):
     book_id = Column(Integer, ForeignKey("book.book_id"), nullable=False)
     written_time = Column(Date, nullable=False)
     last_edit = Column(Date, nullable=True)
-    rating = Column(Float, nullable=False)  
+    rating = Column(Float, nullable=False)
+
     user = relationship("User", backref="reviews")
-    book = relationship("Book", back_populates="reviews")
+    book = relationship("Book", back_populates="reviews")  # ✅ Corrected this
 
     def to_dict(self):
         return {

@@ -1,8 +1,10 @@
 from flask import jsonify, request
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
 import jwt
 from models.User import User
 from models.Book import Book
+from models.Receipt import Receipt 
 from config import app, db
 
 SECRET_KEY = app.config["JWT_SECRET_KEY"]
@@ -102,7 +104,7 @@ def add_book():
         publisher=data.get("publisher"),
         published_at=data.get("published_at"),
         price=data.get("price"),
-        reviews="[]",
+        
         added_by_user_id=user_id,
     )
     db.session.add(new_book)
@@ -116,6 +118,8 @@ def get_book(book_id):
     book = Book.query.get(book_id)
     return jsonify(book.to_dict() if book else {"error": "Book not found"}), 404 if not book else 200
 
+
+
 def purchase_book(book_id):
     token = request.headers.get("Authorization")
     user_id = validate_token(token)
@@ -124,24 +128,14 @@ def purchase_book(book_id):
     book = Book.query.get(book_id)
     if not book:
         return error_response("Book not found", 404)
-    if User.query.get(user_id) in book.purchased_by_users:
+    user = User.query.get(user_id)
+    if user in book.purchased_by_users:
         return error_response("Book already purchased", 400)
-    book.purchased_by_users.append(User.query.get(user_id))
+    receipt = Receipt(user_id=user_id, book_id=book_id, written_time=datetime.utcnow())
+    db.session.add(receipt)
+    book.purchased_by_users.append(user)
     db.session.commit()
-    return jsonify({"message": "Book purchased successfully", "book": book.to_dict()}), 200
-
-# def get_purchased_books(user_id):
-#     token = request.headers.get("Authorization")
-#     user_id_from_token = validate_token(token)
-#     if not user_id_from_token:
-#         return error_response("Invalid or missing token", 401)
-#     if user_id != user_id_from_token:
-#         return error_response("Unauthorized: You can only view your own purchased books", 403)
-#     user = User.query.get(user_id)
-#     if not user:
-#         return error_response("User not found", 404)
-#     purchased_books = [book.to_dict() for book in user.purchased_books]
-#     return jsonify({"message": "Purchased books retrieved successfully", "books": purchased_books}), 200
+    return jsonify({"message": "Book purchased successfully", "book": book.to_dict(), "receipt": receipt.to_dict()}), 200
 
 def get_purchased_books(user_id):
     token = request.headers.get("Authorization")

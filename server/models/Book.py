@@ -21,10 +21,11 @@ class Book(db.Model):
     price = Column(Float, nullable=False)
     added_by_user_id = Column(Integer, ForeignKey("user.user_id"), nullable=False)
 
-    added_by_user = relationship("User", backref="added_books")
-    purchased_by_users = relationship("User", secondary=purchased_books_table, backref="purchased_books_list")
-
-    # ✅ Change direct reference to string: "Review"
+    # added_by_user = relationship("User", backref="added_books")
+    added_by_user = relationship("User", back_populates="added_books")
+    # purchased_by_users = relationship("User", secondary=purchased_books_table, backref="purchased_books_list")
+    purchased_by_users = relationship("User", secondary=purchased_books_table,back_populates="purchased_books")
+    receipts = relationship("Receipt", backref="book", cascade="all, delete-orphan")
     reviews = relationship("Review", back_populates="book", cascade="all, delete-orphan")
 
     def to_dict(self):
