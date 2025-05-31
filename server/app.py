@@ -2,7 +2,7 @@
 from flask import  jsonify, request 
 from config import app, db
 from models.User import User  
-from auth import register_user, login_user,edit_user,validate_token,get_books,get_book,purchase_book,add_book,get_purchased_books
+from auth import register_user, login_user,edit_user,validate_token,get_books,get_book,purchase_book,add_book,get_purchased_books,get_admin_requests, submit_admin_request,review_admin_request,add_review,get_book_reviews,edit_review,delete_review
 
 with app.app_context():
     db.create_all()  # Automatically creates missing tables
@@ -51,6 +51,34 @@ def book_details(book_id):
 @app.route("/book/<int:book_id>/purchase", methods=["POST"])
 def buy_book(book_id):
     return purchase_book(book_id)
+
+@app.route("/book/<int:book_id>/review", methods=["POST"])
+def create_review(book_id):
+    return add_review(book_id)
+
+@app.route("/book/<int:book_id>/review/<int:review_id>", methods=["PUT"])
+def update_review(book_id,review_id):
+    return edit_review(review_id)
+
+@app.route("/book/<int:book_id>/review/<int:review_id>", methods=["DELETE"])
+def remove_review(book_id,review_id):
+    return delete_review(review_id)
+
+@app.route("/book/<int:book_id>/review/", methods=["GET"])  
+def fetch_book_reviews(book_id):
+    return get_book_reviews(book_id)
+
+@app.route("/admin-requests", methods=["GET"])
+def view_admin_requests():
+    return get_admin_requests()
+
+@app.route("/admin-requests", methods=["POST"])
+def create_admin_request():
+    return submit_admin_request()
+
+@app.route("/admin-requests/<int:request_id>", methods=["PATCH"])
+def review_request(request_id):
+    return review_admin_request(request_id)
 
 
 if __name__ == "__main__":

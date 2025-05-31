@@ -4,7 +4,9 @@ from datetime import datetime
 import jwt
 from models.User import User
 from models.Book import Book
+from models.Review import Review
 from models.Receipt import Receipt 
+from models.AdminRequest import AdminRequest
 from config import app, db
 
 SECRET_KEY = app.config["JWT_SECRET_KEY"]
@@ -149,3 +151,183 @@ def get_purchased_books(user_id):
         return error_response("User not found", 404)
     purchased_books = [book.to_dict() for book in user.purchased_books]
     return jsonify({"message": "Purchased books retrieved successfully", "books": purchased_books}), 200
+
+def add_review(book_id):
+    token = request.headers.get("Authorization")
+    user_id = validate_token(token)
+
+    if not user_id:
+        return error_response("Invalid or missing token", 401)
+
+    user = User.query.get(user_id)
+    book = Book.query.get(book_id)
+
+    if not book:
+        return error_response("Book not found", 404)
+
+    if user not in book.purchased_by_users:
+        return error_response("Unauthorized: You can only review books you have purchased", 403)
+
+    data = request.json
+    rating = data.get("rating")
+    comment_text = data.get("comment") 
+    if rating is None or not (0 <= rating <= 5):
+        return error_response("Invalid rating. Must be between 0 and 5", 400)
+    if not comment_text or len(comment_text.strip()) < 10:
+        print(f"Received comment: {comment_text} (Length: {len(comment_text.strip())})")
+        return error_response("Review text must be at least 10 characters", 400)
+
+    new_review = Review(
+        user_id=user_id,
+        book_id=book_id,
+        written_time=datetime.utcnow(),
+        last_edit=None,
+        rating=rating,
+        comment=comment_text  
+    )
+
+    db.session.add(new_review)
+    db.session.commit()
+
+    return jsonify({"message": "Review added successfully", "review": new_review.to_dict()}), 201
+
+def edit_review(review_id):
+    token = request.headers.get("Authorization")
+    user_id = validate_token(token)
+
+    if not user_id:
+        return error_response("Invalid or missing token", 401)
+
+    review = Review.query.get(review_id)
+
+    if not review:
+        return error_response("Review not found", 404)
+
+    if review.user_id != user_id:
+        return error_response("Unauthorized: You can only edit your own reviews", 403)
+
+    data = request.json
+    rating = data.get("rating")
+    comment_text = data.get("comment") 
+
+    if rating is not None and not (0 <= rating <= 5):
+        return error_response("Invalid rating. Must be between 0 and 5", 400)
+    if comment_text and len(comment_text.strip()) < 10:
+        return error_response("Review text must be at least 10 characters", 400)
+
+    review.rating = rating if rating is not None else review.rating
+    review.comment = comment_text if comment_text else review.comment  
+    review.last_edit = datetime.utcnow()
+
+    book_id = review.book_id  # ✅ Directly fetch book_id from review
+
+    db.session.commit()
+
+    return jsonify({
+        "message": "Review updated successfully",
+        "review": review.to_dict(),
+        "book_id": book_id  # ✅ Return book_id if needed
+    }), 200
+
+def delete_review(review_id):
+    token = request.headers.get("Authorization")
+    user_id = validate_token(token)
+
+    if not user_id:
+        return error_response("Invalid or missing token", 401)
+
+    review = Review.query.get(review_id)
+
+    if not review:
+        return error_response("Review not found", 404)
+
+    if review.user_id != user_id:
+        return error_response("Unauthorized: You can only delete your own reviews", 403)
+
+    db.session.delete(review)
+    db.session.commit()
+
+    return jsonify({"message": "Review deleted successfully"}), 200
+
+def get_book_reviews(book_id):
+    book = Book.query.get(book_id)
+
+    if not book:
+        return error_response("Book not found", 404)
+
+    reviews = [review.to_dict() for review in book.reviews]
+
+    return jsonify({"message": "Reviews retrieved successfully", "reviews": reviews}), 200
+
+def get_admin_requests():
+    token = request.headers.get("Authorization")
+    user_id = validate_token(token)
+    if not user_id:
+        return error_response("Invalid or missing token", 401)
+    user = User.query.get(user_id)
+    if not user or not user.is_admin:
+        return error_response("Unauthorized: Only admins can view admin requests", 403)
+    requests = [req.to_dict() for req in AdminRequest.query.all()]
+
+    return jsonify({"message": "Admin requests retrieved successfully", "requests": requests}), 200
+
+def submit_admin_request():
+    token = request.headers.get("Authorization")
+    user_id = validate_token(token)
+
+    if not user_id:
+        return error_response("Invalid or missing token", 401)
+
+    user = User.query.get(user_id)
+    if not user or not user.is_active or user.is_admin:
+        return error_response("Unauthorized: Only active non-admin users can request admin status", 403)
+
+    data = request.json
+    reason = data.get("reason_for_request")
+
+    if not reason:
+        return error_response("Reason for request is required", 400)
+
+    new_request = AdminRequest(
+        requester_id=user_id,
+        reason_for_request=reason,
+        is_accepted=None,  
+        review_time=None,
+        reviewed_by_user_id=None
+    )
+
+    db.session.add(new_request)
+    db.session.commit()
+
+    return jsonify({"message": "Admin request submitted successfully", "request": new_request.to_dict()}), 201
+
+def review_admin_request(request_id):
+    token = request.headers.get("Authorization")
+    user_id = validate_token(token)
+
+    if not user_id:
+        return error_response("Invalid or missing token", 401)
+
+    user = User.query.get(user_id)
+    if not user or not user.is_admin:
+        return error_response("Unauthorized: Only admins can review admin requests", 403)
+
+    admin_request = AdminRequest.query.get(request_id)
+    if not admin_request:
+        return error_response("Admin request not found", 404)
+    if admin_request.is_accepted is not None:
+        return error_response("This request has already been reviewed", 400)
+
+    data = request.json
+    decision = data.get("is_accepted")
+
+    if decision not in [True, False]:
+        return error_response("Invalid decision value. Must be 'True' (accept) or 'False' (reject)", 400)
+    admin_request.is_accepted = decision
+    admin_request.review_time = datetime.utcnow()
+    admin_request.reviewed_by_user_id = user_id
+    db.session.commit()
+    return jsonify({
+        "message": f"Admin request {'accepted' if decision else 'rejected'} successfully",
+        "request": admin_request.to_dict()
+    }), 200
