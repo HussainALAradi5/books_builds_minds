@@ -1,7 +1,12 @@
-from sqlalchemy import Column, Integer, String, Text, Date, Float, ForeignKey
+from sqlalchemy import Column, Integer, String, Text, Date, Float, ForeignKey, Table
 from sqlalchemy.orm import relationship
 from config import db
 import json
+purchased_books_table = db.Table(
+    "purchased_books",
+    db.Column("user_id", Integer, ForeignKey("user.user_id")),
+    db.Column("book_id", Integer, ForeignKey("book.book_id"))
+)
 
 class Book(db.Model):
     __tablename__ = "book"
@@ -16,8 +21,8 @@ class Book(db.Model):
     price = Column(Float, nullable=False)
     reviews = Column(Text, nullable=True)
     added_by_user_id = Column(Integer, ForeignKey("user.user_id"), nullable=False)
-    purchased_by = Column(Text, nullable=True)
     added_by_user = relationship("User", backref="added_books")
+    purchased_by_users = relationship("User", secondary=purchased_books_table, backref="purchased_books_list")
 
     def to_dict(self):
         return {
@@ -27,15 +32,12 @@ class Book(db.Model):
             "title": self.title,
             "author": self.author,
             "publisher": self.publisher,
-            "published_at": str(self.published_at),  # Convert date to string for JSON
+            "published_at": str(self.published_at),
             "price": self.price,
             "reviews": self.get_reviews(),
             "added_by_user_id": self.added_by_user_id,
-            "purchased_by": self.get_purchased_by(),
+            "purchased_by": [user.user_id for user in self.purchased_by_users] 
         }
 
     def get_reviews(self):
         return json.loads(self.reviews) if self.reviews else []
-
-    def get_purchased_by(self):
-        return json.loads(self.purchased_by) if self.purchased_by else []
