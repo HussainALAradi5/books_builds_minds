@@ -15,19 +15,6 @@ def register():
 def login():
     return login_user()
 
-# @app.route("/profile/<int:user_id>", methods=["GET"])
-# def profile(user_id):
-#     token = request.headers.get("Authorization")  
-
-#     if not validate_token(token):
-#         return jsonify({"error": "Invalid or missing token"}), 401
-
-#     user = User.query.filter_by(user_id=user_id).first()
-    
-#     if not user:
-#         return jsonify({"error": "User not found"}), 404
-
-#     return jsonify(user.to_dict()), 200
 @app.route("/profile/<int:user_id>", methods=["GET"])
 def profile(user_id):
     token = request.headers.get("Authorization") 

@@ -53,15 +53,6 @@ def login_user():
     token = generate_token(user.user_id)
     return jsonify({"message": "Login successful", "token": token}), 200
 
-# def validate_token(token):
-#     if not token:
-#         return False
-#     try:
-#         decoded_token = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
-#         return User.query.get(decoded_token.get("user_id")) is not None
-#     except (jwt.ExpiredSignatureError, jwt.InvalidTokenError):
-#         return False
-
 def validate_token(token):
     """Returns user ID if the token is valid, else None."""
     if not token:
