@@ -2,6 +2,7 @@
 from flask import  jsonify, request 
 from config import app, db
 from models.User import User  
+from upload import upload_book_image
 from auth import register_user, login_user,edit_user,validate_token,get_books,get_book,purchase_book,add_book,get_purchased_books,get_admin_requests, submit_admin_request,review_admin_request,add_review,get_book_reviews,edit_review,delete_review
 
 with app.app_context():
@@ -80,6 +81,9 @@ def create_admin_request():
 def review_request(request_id):
     return review_admin_request(request_id)
 
+@app.route("/upload/book/<int:book_id>", methods=["POST"])
+def upload_book(book_id):
+    return upload_book_image(book_id)
 
 if __name__ == "__main__":
     app.run(debug=True)
