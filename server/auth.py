@@ -1,7 +1,6 @@
 from flask import jsonify, request
 from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
-import os
 from models.User import User
 from config import app, db
 
@@ -54,13 +53,12 @@ def login_user():
     return jsonify({"message": "Login successful", "token": token}), 200
 
 def validate_token(token):
-    """Returns user ID if the token is valid, else None."""
     if not token:
         return None
 
     try:
-        token = token.replace("Bearer ", "")  # ✅ Remove "Bearer " prefix
+        token = token.replace("Bearer ", "") 
         decoded_token = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
-        return decoded_token.get("user_id")  # ✅ Return user ID from token
+        return decoded_token.get("user_id")  
     except (jwt.ExpiredSignatureError, jwt.InvalidTokenError):
         return None
