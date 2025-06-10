@@ -1,11 +1,11 @@
 .footer {
   text-align: center;
-  padding: 15px;
+  padding: 10px 0 24px 0;
   position: fixed;
   bottom: 0;
   width: 100%;
   margin-top: 2rem;
   box-shadow: 0 5px 2rem rgba(30, 60, 114, 0.15);
-  background-color: darkcyan;
+  background-color: darkblue;
   color: white;
 }
