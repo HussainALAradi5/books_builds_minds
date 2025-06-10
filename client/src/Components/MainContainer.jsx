@@ -1,26 +1,12 @@
-import HomePage from '../Pages/HomePage'
-import Footer from './Footer'
-import Header from './Header'
+import HomePage from "../Pages/HomePage"
+import Footer from "./Footer"
+import Header from "./Header"
 
 const MainContainer = () => {
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        minHeight: '100vh',
-        width: '100vw', // Ensures full width
-        overflowX: 'hidden' // Prevent horizontal scroll
-      }}
-      className="mainContainer"
-    >
+    <div className="mainContainer">
       <Header />
-
-      {/* Main content area that stretches */}
-      <div style={{ flex: 1 }}>
-        <HomePage />
-      </div>
-
+      <HomePage />
       <Footer />
     </div>
   )

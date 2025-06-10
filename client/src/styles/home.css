@@ -1,0 +1,8 @@
+.homepage {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 40px;
+  width: 100vw;
+  height: 70vh;
+}

@@ -1,10 +1,11 @@
-import MainContainer from './Components/MainContainer'
-
+import MainContainer from "./Components/MainContainer"
+// import "./styles/App.css"
 const App = () => {
   return (
-    <div>
+    <div className="app">
       <MainContainer />
     </div>
   )
 }
+
 export default App
