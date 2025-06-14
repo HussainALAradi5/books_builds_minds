@@ -4,5 +4,7 @@ body,
   margin: 0;
   padding: 0;
   width: 100%;
-  background-color: bisque;
+  background-color: royalblue;
+  color: whitesmoke;
+  font-family: "Segoe UI", "Roboto", Arial, sans-serif;
 }
