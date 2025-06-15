@@ -5,4 +5,10 @@
   width: 100%;
   box-shadow: 0 2px 12px rgba(245, 245, 245, 0.515);
   background-color: midnightblue;
+  text-align: right;
+}
+
+.header:hover {
+  background-color: olivedrab;
+  transition: 1.5s;
 }
