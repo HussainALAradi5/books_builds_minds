@@ -1,14 +1,18 @@
-.header {
-  text-align: center;
-  padding: 10px 0 24px 0;
+.header-container {
+  padding: 15px 20px 15px 20px;
   position: fixed;
   width: 100%;
   box-shadow: 0 2px 12px rgba(245, 245, 245, 0.515);
   background-color: midnightblue;
-  text-align: right;
-}
 
-.header:hover {
+}
+.header-container:hover {
   background-color: olivedrab;
   transition: 1.5s;
+}
+
+
+.header{
+  margin-right: 7rem;
+    text-align: right;
 }
