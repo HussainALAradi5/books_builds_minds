@@ -1,41 +1,40 @@
 import { useState } from "react";
 import "../styles/form.css";
+const Form = ({ mode = "login" }) => {
+  const isLogin = mode === "login";
 
-const Form = () => {
-  const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
     username: "",
     email: "",
     password: "",
-  
   });
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
- const handleSubmit = (e) => {
-  e.preventDefault();
-  const { username, email, password } = formData;
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const { username, email, password } = formData;
 
-  if (isLogin) {
-    if (!username && !email) {
-      alert("Please enter either a username or an email.");
-      return;
+    if (isLogin) {
+      if (!username && !email) {
+        alert("Please enter either a username or an email.");
+        return;
+      }
+      if (!password) {
+        alert("Password is required.");
+        return;
+      }
+      console.log("Logging in with", username || email, password);
+    } else {
+      if (!username || !email || !password) {
+        alert("Please fill in all required fields.");
+        return;
+      }
+      console.log("Registering with", formData);
     }
-    if (!password) {
-      alert("Password is required.");
-      return;
-    }
-    console.log("Logging in with", username || email, password);
-  } else {
-    if (!username || !email || !password) {
-      alert("Please fill in all required fields.");
-      return;
-    }
-    console.log("Registering with", formData);
-  }
-};
+  };
 
   return (
     <div className="auth-container">
@@ -44,7 +43,6 @@ const Form = () => {
 
         {!isLogin && (
           <>
-           
             <input
               type="text"
               name="username"
@@ -85,12 +83,6 @@ const Form = () => {
         />
 
         <button type="submit">{isLogin ? "Login" : "Register"}</button>
-
-        <p className="toggle" onClick={() => setIsLogin(!isLogin)}>
-          {isLogin
-            ? "Need an account? Register here"
-            : "Already have an account? Login"}
-        </p>
       </form>
     </div>
   );
