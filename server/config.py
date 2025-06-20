@@ -7,11 +7,13 @@ from dotenv import load_dotenv
 import psycopg2
 from urllib.parse import urlparse
 
-load_dotenv('../.env')
+env = load_dotenv('../.env')
 app = Flask(__name__)
 CORS(app)
 url = os.getenv('DATABASE_URL')
+print(f"url:{url}")
 secret_key = os.getenv('SECRET_KEY')
+print(f"secret:{secret_key}")
 app.config["SQLALCHEMY_DATABASE_URI"] = url
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', secret_key)
