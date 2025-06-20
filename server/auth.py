@@ -34,12 +34,26 @@ def error_response(message, status_code=400):
 
 def register_user():
     data = request.json
-    user_name, email, password = data.get("user_name").lower(), data.get("email").lower(), data.get("password")
+    user_name = data.get("user_name", "").lower()
+    email = data.get("email", "").lower()
+    password = data.get("password")
+
+    print(f'data: {data} \nuser_name: {user_name}')
+
     if User.query.filter((User.user_name == user_name) | (User.email == email)).first():
         return error_response("Username or email already exists", 400)
 
     if not validate_password(password):
         return error_response("Password must contain at least 3 numbers and 5 letters", 400)
+
+    new_user = User(
+        user_name=user_name,
+        email=email,
+        password_digest=generate_password_hash(password),
+        is_admin=False,
+        is_active=True
+    )
+
     db.session.add(new_user)
     db.session.commit()
     return success_response("User registered successfully", 201)
