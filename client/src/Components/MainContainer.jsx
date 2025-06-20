@@ -1,15 +1,24 @@
-import HomePage from "../Pages/HomePage"
-import Footer from "./Footer"
-import Header from "./Header"
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import HomePage from "../Pages/HomePage";
+import LoginPage from "../Pages/LoginPage";
+import RegisterPage from "../Pages/RegisterPage";
+import Header from "./Header";
+import Footer from "./Footer";
 
 const MainContainer = () => {
   return (
-    <div className="mainContainer">
-      <Header />
-      <HomePage />
-      <Footer />
-    </div>
-  )
-}
+    <Router>
+      <div className="mainContainer">
+        <Header />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+        </Routes>
+        <Footer />
+      </div>
+    </Router>
+  );
+};
 
-export default MainContainer
+export default MainContainer;
