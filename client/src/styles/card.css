@@ -1,10 +1,11 @@
 .card {
-  width: 14rem;
-  height: 14rem;
+  width: 16rem;
   background-color: darkslateblue;
   border-radius: 20px;
   padding: 20px;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  color: white;
+  text-align: center;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
 }
@@ -12,18 +13,20 @@
 .card:hover {
   transform: translateY(-6px) scale(1.03);
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.7);
-  background-color: deepskyblue;
-  transition: 1.5s;
+  background-color: royalblue;
 }
 
-.card h3 {
-  margin: 0 0 10px;
-  font-size: 1.4rem;
+.card img.avatar {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 12px;
+  border: 2px solid #fff;
 }
 
-.card p {
-  margin: 0;
-  font-size: 0.95rem;
-  color: #666;
-  line-height: 1.5;
+.card img.cover {
+  width: 100%;
+  border-radius: 10px;
+  margin-bottom: 10px;
 }

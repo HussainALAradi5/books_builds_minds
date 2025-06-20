@@ -4,6 +4,7 @@ import LoginPage from "../Pages/LoginPage";
 import RegisterPage from "../Pages/RegisterPage";
 import Header from "./Header";
 import Footer from "./Footer";
+import ProfilePage from "../Pages/ProfilePage";
 
 const MainContainer = () => {
   return (
@@ -14,6 +15,7 @@ const MainContainer = () => {
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
         </Routes>
         <Footer />
       </div>

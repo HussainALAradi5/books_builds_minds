@@ -1,12 +1,36 @@
-import "../styles/card.css"
+import "../styles/card.css";
 
-const Card = () => {
+const Card = ({ type, data }) => {
   return (
     <div className="card">
-      <h3></h3>
-      <p></p>
-    </div>
-  )
-}
+      {type === "user" && (
+        <>
+          {data.avatar && (
+            <img className="avatar" src={data.avatar} alt={data.username} />
+          )}
+          <h3>{data.username}</h3>
+          <p>Email: {data.email}</p>
+          <p>Password: {data.password}</p>
+          <p>Status: {data.status}</p>
+        </>
+      )}
 
-export default Card
+      {type === "book" && (
+        <>
+          <h3>{data.title}</h3>
+          {data.image && (
+            <img
+              className="cover"
+              src={data.image}
+              alt={data.title}
+            />
+          )}
+          <p>Author: {data.author}</p>
+          <p>Publisher: {data.publisher}</p>
+        </>
+      )}
+    </div>
+  );
+};
+
+export default Card;
