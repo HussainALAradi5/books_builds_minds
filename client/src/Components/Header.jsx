@@ -1,18 +1,18 @@
-import "../styles/header.css"
-import Button from "./Button"
-const Header = () => {
-  const home = "Homepage"
-  const profile = "Profile"
-  const login = "Login"
-  const regsiter = "Register"
-  return <div className="header-container">
-    
-    <Button text ={home}/>
-    <Button text ={profile}/>
-    <Button text ={login}/>
-    <Button text ={regsiter}/>
-   
-    </div>
-}
+import "../styles/header.css";
+import Button from "./Button";
+import { useNavigate } from "react-router-dom";
 
-export default Header
+const Header = () => {
+  const navigate = useNavigate();
+
+  return (
+    <div className="header-container">
+      <Button text="Homepage" onClick={() => navigate("/")} />
+      <Button text="Profile" onClick={() => navigate("/profile")} />
+      <Button text="Login" onClick={() => navigate("/login")} />
+      <Button text="Register" onClick={() => navigate("/register")} />
+    </div>
+  );
+};
+
+export default Header;

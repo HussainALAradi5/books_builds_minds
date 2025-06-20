@@ -1,5 +1,11 @@
-import '../styles/button.css'
-const Button = ({text}) => {
-return <button className="button">{text}</button>;
-}
-export default Button
+import '../styles/button.css';
+
+const Button = ({ text, onClick }) => {
+  return (
+    <button className="button" onClick={onClick}>
+      {text}
+    </button>
+  );
+};
+
+export default Button;
