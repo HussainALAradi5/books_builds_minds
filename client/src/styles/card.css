@@ -1,13 +1,20 @@
 .card {
-  width: 16rem;
+  width: 100%;
+  max-width: 32rem;
+  aspect-ratio: 3 / 2; /* Wider layout */
   background-color: darkslateblue;
   border-radius: 20px;
-  padding: 20px;
+  padding: 1.5rem;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
   color: white;
   text-align: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
   cursor: pointer;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .card:hover {
@@ -17,8 +24,8 @@
 }
 
 .card img.avatar {
-  width: 6rem;
-  height: 6rem;
+  width: 4rem;
+  height: 4rem;
   object-fit: cover;
   border-radius: 50%;
   margin-bottom: 12px;
@@ -27,6 +34,7 @@
 
 .card img.cover {
   width: 100%;
-  border-radius: 10px;
+  height: 100%;
+  display: block;
   margin-bottom: 10px;
 }

@@ -4,6 +4,12 @@ import "../styles/card.css";
 
 const Card = ({ type, data }) => {
   const [userData, setUserData] = useState(data || null);
+   const fakeBook = {
+    title: "The Lost Code",
+    author: "A. I. Narrator",
+    publisher: "Copilot Press",
+    image: "https://covers.openlibrary.org/b/id/10523399-L.jpg",
+  };
 
   useEffect(() => {
     if (type === "user" && !data) {
@@ -31,16 +37,17 @@ const Card = ({ type, data }) => {
         </>
       )}
 
-      {type === "book" && (
+       {type === "book" && (
         <>
-          <h3>{data.title}</h3>
-          {data.image && (
-            <img className="cover" src={data.image} alt={data.title} />
+          <h3>{(data || fakeBook).title}</h3>
+          {(data || fakeBook).image && (
+            <img className="cover" src={(data || fakeBook).image} alt={(data || fakeBook).title} />
           )}
-          <p>Author: {data.author}</p>
-          <p>Publisher: {data.publisher}</p>
+          <p>Author: {(data || fakeBook).author}</p>
+          <p>Publisher: {(data || fakeBook).publisher}</p>
         </>
       )}
+
     </div>
   );
 };

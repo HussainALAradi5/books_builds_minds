@@ -1,8 +1,15 @@
+
 .homepage {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
-  width: 50vw;
-  height: 70vh;
-  padding: 8rem;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 2rem;
+  padding: 5rem;
+  padding-top: 8rem;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 100vw;
+  min-height: 100vh;
+  box-sizing: border-box;
 }
