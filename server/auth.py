@@ -38,7 +38,6 @@ def register_user():
     email = data.get("email", "").lower()
     password = data.get("password")
 
-    print(f'data: {data} \nuser_name: {user_name}')
 
     if User.query.filter((User.user_name == user_name) | (User.email == email)).first():
         return error_response("Username or email already exists", 400)
