@@ -1,5 +1,4 @@
 const API_URL = import.meta.env.VITE_API_URL;
-console.log('API_URL',API_URL);
 
 const parseJSON = async (response) => {
   const data = await response.json();
@@ -15,8 +14,7 @@ const registerUser = async ({ user_name, email, password }) => {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ user_name, email, password }),
   });
-  console.log("response:",response);
-  
+
   return await parseJSON(response);
 };
 
@@ -27,7 +25,10 @@ const loginUser = async ({ user_name_or_email, password }) => {
     body: JSON.stringify({ user_name_or_email, password }),
   });
 
-  return await parseJSON(response);
+  const data = await parseJSON(response);
+  const profile = await fetchUserProfile(data.user_id, data.token);
+
+  return { ...data, profile };
 };
 
 const fetchUserProfile = async (user_id, token) => {

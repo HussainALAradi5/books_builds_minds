@@ -3,7 +3,7 @@ from flask import  jsonify, request
 from config import app, db
 from models.User import User  
 from upload import upload_book_image
-from auth import register_user, login_user,edit_user,validate_token,get_books,get_book,purchase_book,add_book,get_purchased_books,get_admin_requests, submit_admin_request,review_admin_request,add_review,get_book_reviews,edit_review,delete_review
+from auth import register_user, login_user,edit_user,user_details,get_books,get_book,purchase_book,add_book,get_purchased_books,get_admin_requests, submit_admin_request,review_admin_request,add_review,get_book_reviews,edit_review,delete_review
 
 with app.app_context():
     db.create_all()  # Automatically creates missing tables
@@ -22,16 +22,7 @@ def login():
 
 @app.route("/profile/<int:user_id>", methods=["GET"])
 def profile(user_id):
-    token = request.headers.get("Authorization") 
-    user_id_from_token = validate_token(token)
-    if not user_id_from_token:
-        return jsonify({"error": "Invalid or missing token"}), 401
-    if user_id != user_id_from_token:
-        return jsonify({"error": "Unauthorized access"}), 403
-    user = User.query.get(user_id)
-    if not user:
-        return jsonify({"error": "User not found"}), 404
-    return jsonify(user.to_dict()), 200
+    return user_details(user_id)
 
 @app.route("/profile/<int:user_id>/edit", methods=["PUT"])
 def update_profile(user_id):

@@ -3,19 +3,24 @@ import "../styles/form.css";
 import { registerUser, loginUser } from "../../service/auth";
 import { useNavigate } from "react-router-dom";
 
-const Form = ({ mode = "login" }) => {
+const Form = ({ mode = "login", onSubmit }) => {
   const isLogin = mode === "login";
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    identifier: "", 
-    username: "",   
+    identifier: "",
+    username: "",
     email: "",
     password: "",
   });
 
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (errorMessage) setErrorMessage("");
+    if (successMessage) setSuccessMessage("");
   };
 
   const handleSubmit = async (e) => {
@@ -25,7 +30,7 @@ const Form = ({ mode = "login" }) => {
     try {
       if (isLogin) {
         if (!identifier || !password) {
-          alert("Please enter your username/email and password.");
+          setErrorMessage("Please enter your username/email and password.");
           return;
         }
 
@@ -35,12 +40,13 @@ const Form = ({ mode = "login" }) => {
         });
 
         localStorage.setItem("token", result.token);
-        localStorage.setItem("user_id", result.user_id); // if returned from backend
-        alert(result.message || "Login successful");
-        navigate("/profile");
+        localStorage.setItem("user_id", result.user_id);
+        onSubmit?.(result.profile);
+        setSuccessMessage(result.message || "Login successful");
+        setTimeout(() => navigate("/profile"), 1000);
       } else {
         if (!username || !email || !password) {
-          alert("Please fill in all required fields.");
+          setErrorMessage("Please fill in all required fields.");
           return;
         }
 
@@ -50,11 +56,11 @@ const Form = ({ mode = "login" }) => {
           password,
         });
 
-        alert(result.message || "Registration successful");
-        navigate("/login");
+        setSuccessMessage(result.message || "Registration successful");
+        setTimeout(() => navigate("/login"), 1000);
       }
     } catch (err) {
-      alert(err.message);
+      setErrorMessage(err.message || "Something went wrong. Please try again.");
     }
   };
 
@@ -62,6 +68,8 @@ const Form = ({ mode = "login" }) => {
     <div className="auth-container">
       <form className="auth-form" onSubmit={handleSubmit}>
         <h2>{isLogin ? "Login" : "Register"}</h2>
+        {errorMessage && <div className="error-message">{errorMessage}</div>}
+        {successMessage && <div className="success-message">{successMessage}</div>}
 
         {!isLogin && (
           <>

@@ -65,7 +65,12 @@ def login_user():
     user = User.query.filter((User.user_name == identifier) | (User.email == identifier)).first()
     if not user or not check_password_hash(user.password_digest, password):
         return error_response("Invalid credentials", 401)
-    return jsonify({"message": "Login successful", "token": generate_token(user.user_id)}), 200
+
+    return jsonify({
+        "message": "Login successful",
+        "token": generate_token(user.user_id),
+        "user_id": user.user_id  
+    }), 200
 
 def edit_user(user_id):
     token = request.headers.get("Authorization")
@@ -98,6 +103,20 @@ def edit_user(user_id):
     db.session.commit()
     return jsonify({"message": "User profile updated successfully", "user": user.to_dict()}), 200
 
+
+def user_details(user_id):
+    token = request.headers.get("Authorization") 
+    user_id_from_token = validate_token(token)
+    if not user_id_from_token:
+        return jsonify({"error": "Invalid or missing token"}), 401
+    if user_id != user_id_from_token:
+        return jsonify({"error": "Unauthorized access"}), 403
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+    return jsonify(user.to_dict()), 200
+
+
 def add_book():
     token = request.headers.get("Authorization")
     user_id = validate_token(token)
@@ -124,6 +143,7 @@ def add_book():
     db.session.add(new_book)
     db.session.commit()
     return jsonify({"message": "Book added successfully", "book": new_book.to_dict()}), 201
+
 
 def get_books():
     return jsonify([book.to_dict() for book in Book.query.all()]), 200
@@ -231,14 +251,14 @@ def edit_review(review_id):
     review.comment = comment_text if comment_text else review.comment  
     review.last_edit = datetime.utcnow()
 
-    book_id = review.book_id  # ✅ Directly fetch book_id from review
+    book_id = review.book_id 
 
     db.session.commit()
 
     return jsonify({
         "message": "Review updated successfully",
         "review": review.to_dict(),
-        "book_id": book_id  # ✅ Return book_id if needed
+        "book_id": book_id  
     }), 200
 
 def delete_review(review_id):

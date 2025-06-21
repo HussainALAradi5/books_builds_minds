@@ -1,9 +1,10 @@
 import Form from "../Components/Form";
-const LoginPage = () => {
-  const handleLogin = (data) => {
 
-    console.log("Login request:", data);
-     // You can add your login API call or logic here
+const LoginPage = () => {
+  const handleLogin = (userProfile) => {
+    console.log("Logged in user:", userProfile);
+    localStorage.setItem("user_name", userProfile.user_name);
+    localStorage.setItem("email", userProfile.email);
   };
 
   return (
