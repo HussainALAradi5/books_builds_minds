@@ -20,26 +20,43 @@ const Header = () => {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user_id");
-    localStorage.removeItem("user_name");
-    localStorage.removeItem("email");
+    localStorage.clear();
     setIsLoggedIn(false);
     navigate("/login");
   };
 
   return (
     <div className="header-container">
-      <Button text="Homepage" onClick={() => navigate("/")} />
+      <Button
+        text="Homepage"
+        onClick={() => navigate("/")}
+        className="header-button"
+      />
       {isLoggedIn ? (
         <>
-          <Button text="Profile" onClick={() => navigate("/profile")} />
-          <Button text="Logout" onClick={handleLogout} />
+          <Button
+            text="Profile"
+            onClick={() => navigate("/profile")}
+            className="header-button"
+          />
+          <Button
+            text="Logout"
+            onClick={handleLogout}
+            className="header-button"
+          />
         </>
       ) : (
         <>
-          <Button text="Login" onClick={() => navigate("/login")} />
-          <Button text="Register" onClick={() => navigate("/register")} />
+          <Button
+            text="Login"
+            onClick={() => navigate("/login")}
+            className="header-button"
+          />
+          <Button
+            text="Register"
+            onClick={() => navigate("/register")}
+            className="header-button"
+          />
         </>
       )}
     </div>

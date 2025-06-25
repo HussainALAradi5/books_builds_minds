@@ -1,6 +1,5 @@
 .button {
-  /* background-color: #4CAF50; green */
-  background-color: olivedrab; /* green */
+  background-color: royalblue;
   color: white;
   padding: 12px 24px;
   border: none;
@@ -17,5 +16,14 @@
 }
 
 .button:active {
-  transform: scale(0.70);
+  transform: scale(0.7);
+}
+
+.header-button {
+  margin: 0 8px;
+}
+
+.form-button {
+  width: 100%;
+  margin-top: 1rem;
 }

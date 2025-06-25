@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "../styles/form.css";
+import Button from "./Button";
 import { registerUser, loginUser } from "../../service/auth";
 import { useNavigate } from "react-router-dom";
 
@@ -69,7 +70,9 @@ const Form = ({ mode = "login", onSubmit }) => {
       <form className="auth-form" onSubmit={handleSubmit}>
         <h2>{isLogin ? "Login" : "Register"}</h2>
         {errorMessage && <div className="error-message">{errorMessage}</div>}
-        {successMessage && <div className="success-message">{successMessage}</div>}
+        {successMessage && (
+          <div className="success-message">{successMessage}</div>
+        )}
 
         {!isLogin && (
           <>
@@ -112,7 +115,7 @@ const Form = ({ mode = "login", onSubmit }) => {
           required
         />
 
-        <button type="submit">{isLogin ? "Login" : "Register"}</button>
+        <Button text={isLogin ? "Login" : "Register"} className="form-button" />
       </form>
     </div>
   );
