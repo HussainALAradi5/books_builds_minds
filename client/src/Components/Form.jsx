@@ -44,7 +44,11 @@ const Form = ({ mode = "login", onSubmit }) => {
         localStorage.setItem("user_id", result.user_id);
         onSubmit?.(result.profile);
         setSuccessMessage(result.message || "Login successful");
-        setTimeout(() => navigate("/profile"), 1000);
+
+        setTimeout(() => {
+          navigate("/profile");
+          window.location.reload();
+        }, 1000);
       } else {
         if (!username || !email || !password) {
           setErrorMessage("Please fill in all required fields.");
