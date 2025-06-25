@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Form from "../Components/Form";
 import Button from "../Components/Button";
-import "../styles/admin.css";
 
 const AdminPanel = () => {
   const [showAddForm, setShowAddForm] = useState(false);
@@ -11,7 +10,7 @@ const AdminPanel = () => {
   };
 
   return (
-    <div className="admin-panel">
+    <div className={`admin-panel ${showAddForm ? "show-popup" : ""}`}>
       <div className="admin-header">
         <h1>Admin Dashboard</h1>
         <Button

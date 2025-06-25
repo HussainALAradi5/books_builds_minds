@@ -8,4 +8,5 @@ body,
   color: whitesmoke;
   background: #f0f2f5;
   font-family: "Segoe UI", "Roboto", Arial, sans-serif;
+  overflow: hidden;
 }

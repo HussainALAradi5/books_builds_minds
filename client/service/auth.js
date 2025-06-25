@@ -87,9 +87,7 @@ const addBook = async (bookData) =>
   fetchWithAuth(`${API_URL}/book`, "POST", bookData);
 
 const fetchAllBooks = async () => {
-  const response = await fetch(`${API_URL}/book`, {
-    method: "GET",
-  });
+  const response = await fetch(`${API_URL}/`); 
   return parseJSON(response);
 };
 
