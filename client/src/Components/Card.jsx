@@ -1,15 +1,20 @@
 import { useEffect, useState } from "react";
-import { fetchUserProfile } from "../../service/auth"; // adjust path if needed
+import { fetchUserProfile } from "../../service/auth";
 import "../styles/card.css";
 
 const Card = ({ type, data }) => {
   const [userData, setUserData] = useState(data || null);
-   const fakeBook = {
+
+  const fakeBook = {
     title: "The Lost Code",
     author: "A. I. Narrator",
     publisher: "Copilot Press",
-    image: "https://covers.openlibrary.org/b/id/10523399-L.jpg",
+    book_image: "https://covers.openlibrary.org/b/id/10523399-L.jpg",
   };
+
+  // Normalize book data
+  const book = data || fakeBook;
+  const bookImage = book.image || book.book_image;
 
   useEffect(() => {
     if (type === "user" && !data) {
@@ -29,7 +34,11 @@ const Card = ({ type, data }) => {
       {type === "user" && userData && (
         <>
           {userData.avatar && (
-            <img className="avatar" src={userData.avatar} alt={userData.user_name} />
+            <img
+              className="avatar"
+              src={userData.avatar}
+              alt={userData.user_name}
+            />
           )}
           <h3>{userData.user_name}</h3>
           <p>Email: {userData.email}</p>
@@ -37,17 +46,16 @@ const Card = ({ type, data }) => {
         </>
       )}
 
-       {type === "book" && (
+      {type === "book" && (
         <>
-          <h3>{(data || fakeBook).title}</h3>
-          {(data || fakeBook).image && (
-            <img className="cover" src={(data || fakeBook).image} alt={(data || fakeBook).title} />
+          <h3>{book.title}</h3>
+          {bookImage && (
+            <img className="cover" src={bookImage} alt={book.title} />
           )}
-          <p>Author: {(data || fakeBook).author}</p>
-          <p>Publisher: {(data || fakeBook).publisher}</p>
+          <p>Author: {book.author}</p>
+          <p>Publisher: {book.publisher}</p>
         </>
       )}
-
     </div>
   );
 };
