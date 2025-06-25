@@ -1,8 +1,8 @@
 import { useState } from "react";
-import "../styles/form.css";
-import Button from "./Button";
-import { registerUser, loginUser } from "../../service/auth";
 import { useNavigate } from "react-router-dom";
+import { loginUser, registerUser } from "../../service/auth";
+import AuthForm from "./AuthForm";
+import "../styles/form.css";
 
 const Form = ({ mode = "login", onSubmit }) => {
   const isLogin = mode === "login";
@@ -20,8 +20,8 @@ const Form = ({ mode = "login", onSubmit }) => {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    if (errorMessage) setErrorMessage("");
-    if (successMessage) setSuccessMessage("");
+    setErrorMessage("");
+    setSuccessMessage("");
   };
 
   const handleSubmit = async (e) => {
@@ -72,54 +72,13 @@ const Form = ({ mode = "login", onSubmit }) => {
   return (
     <div className="auth-container">
       <form className="auth-form" onSubmit={handleSubmit}>
-        <h2>{isLogin ? "Login" : "Register"}</h2>
-        {errorMessage && <div className="error-message">{errorMessage}</div>}
-        {successMessage && (
-          <div className="success-message">{successMessage}</div>
-        )}
-
-        {!isLogin && (
-          <>
-            <input
-              type="text"
-              name="username"
-              value={formData.username}
-              onChange={handleChange}
-              placeholder="Username"
-              required
-            />
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="Email"
-              required
-            />
-          </>
-        )}
-
-        {isLogin && (
-          <input
-            type="text"
-            name="identifier"
-            value={formData.identifier}
-            onChange={handleChange}
-            placeholder="Username or Email"
-            required
-          />
-        )}
-
-        <input
-          type="password"
-          name="password"
-          value={formData.password}
-          onChange={handleChange}
-          placeholder="Password"
-          required
+        <AuthForm
+          isLogin={isLogin}
+          formData={formData}
+          handleChange={handleChange}
+          errorMessage={errorMessage}
+          successMessage={successMessage}
         />
-
-        <Button text={isLogin ? "Login" : "Register"} className="form-button" />
       </form>
     </div>
   );
