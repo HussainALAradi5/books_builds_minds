@@ -1,4 +1,3 @@
-import Button from "./Button";
 import "../styles/form.css";
 
 const AuthForm = ({
@@ -53,8 +52,6 @@ const AuthForm = ({
         onChange={handleChange}
         placeholder="Password"
       />
-
-      <Button text={isLogin ? "Login" : "Register"} className="form-button" />
     </>
   );
 };

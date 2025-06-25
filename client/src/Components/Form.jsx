@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginUser, registerUser } from "../../service/auth";
-import { addBook } from "../../service/auth";
+import { loginUser, registerUser, addBook } from "../../service/auth";
 import AuthForm from "./AuthForm";
 import BookForm from "./BookForm";
 import Button from "./Button";
@@ -80,6 +79,7 @@ const Form = ({ mode = "login", onSubmit }) => {
         });
         localStorage.setItem("token", result.token);
         localStorage.setItem("user_id", result.user_id);
+        localStorage.setItem("is_admin", result.profile.is_admin);
         onSubmit?.(result.profile);
         setSuccessMessage(result.message || "Login successful");
 
@@ -132,10 +132,7 @@ const Form = ({ mode = "login", onSubmit }) => {
             successMessage={successMessage}
           />
         )}
-        {errorMessage && <div className="error-message">{errorMessage}</div>}
-        {successMessage && (
-          <div className="success-message">{successMessage}</div>
-        )}
+
         <Button
           text={isLogin ? "Login" : isRegister ? "Register" : "Add Book"}
           className="form-button"

@@ -5,6 +5,7 @@ import RegisterPage from "../Pages/RegisterPage";
 import Header from "./Header";
 import Footer from "./Footer";
 import ProfilePage from "../Pages/ProfilePage";
+import AdminPanelPage from "../Pages/AdminPanelPage";
 
 const MainContainer = () => {
   return (

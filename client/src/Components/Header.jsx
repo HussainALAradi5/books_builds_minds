@@ -6,12 +6,15 @@ import { useEffect, useState } from "react";
 const Header = () => {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     const checkLoginStatus = () => {
       const token = localStorage.getItem("token");
       const userId = localStorage.getItem("user_id");
+      const adminFlag = localStorage.getItem("is_admin") === "true";
       setIsLoggedIn(!!token && !!userId);
+      setIsAdmin(adminFlag);
     };
 
     checkLoginStatus();
@@ -22,6 +25,7 @@ const Header = () => {
   const handleLogout = () => {
     localStorage.clear();
     setIsLoggedIn(false);
+    setIsAdmin(false);
     navigate("/login");
   };
 
@@ -32,6 +36,7 @@ const Header = () => {
         onClick={() => navigate("/")}
         className="header-button"
       />
+
       {isLoggedIn ? (
         <>
           <Button
@@ -39,6 +44,13 @@ const Header = () => {
             onClick={() => navigate("/profile")}
             className="header-button"
           />
+          {isAdmin && (
+            <Button
+              text="Admin Panel"
+              onClick={() => navigate("/admin")}
+              className="header-button"
+            />
+          )}
           <Button
             text="Logout"
             onClick={handleLogout}
