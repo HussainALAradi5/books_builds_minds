@@ -1,0 +1,36 @@
+.admin-panel {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.admin-header h1 {
+  font-size: 2rem;
+  color: #333;
+}
+
+.admin-action-button {
+  background-color: #007bff;
+  font-weight: bold;
+}
+
+.admin-action-button:hover {
+  background-color: #0056b3;
+}
+
+.admin-form-wrapper {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.06);
+}

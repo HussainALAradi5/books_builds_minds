@@ -55,9 +55,68 @@ const editUser = async ({ user_id, token, updatedData }) => {
   return await parseJSON(response);
 };
 
+const addBook = async (bookData) => {
+  const token = localStorage.getItem("token");
+  const response = await fetch(`${API_URL}/book`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(bookData),
+  });
+
+  return await parseJSON(response);
+};
+
+const fetchAllBooks = async () => {
+  const response = await fetch(`${API_URL}/book`, {
+    method: "GET",
+  });
+
+  return await parseJSON(response);
+};
+
+const fetchBookById = async (book_id) => {
+  const response = await fetch(`${API_URL}/book/${book_id}`, {
+    method: "GET",
+  });
+
+  return await parseJSON(response);
+};
+
+const purchaseBook = async (book_id) => {
+  const token = localStorage.getItem("token");
+  const response = await fetch(`${API_URL}/book/${book_id}/purchase`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return await parseJSON(response);
+};
+
+const fetchPurchasedBooks = async (user_id) => {
+  const token = localStorage.getItem("token");
+  const response = await fetch(`${API_URL}/profile/${user_id}/books`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return await parseJSON(response);
+};
+
 export {
   registerUser,
   loginUser,
   fetchUserProfile,
   editUser,
+  addBook,
+  fetchAllBooks,
+  fetchBookById,
+  purchaseBook,
+  fetchPurchasedBooks,
 };

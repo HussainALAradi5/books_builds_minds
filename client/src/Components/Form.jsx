@@ -1,19 +1,36 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser, registerUser } from "../../service/auth";
+import { addBook } from "../../service/auth";
 import AuthForm from "./AuthForm";
+import BookForm from "./BookForm";
+import Button from "./Button";
 import "../styles/form.css";
 
 const Form = ({ mode = "login", onSubmit }) => {
   const isLogin = mode === "login";
+  const isRegister = mode === "register";
+  const isAddBook = mode === "add-book";
   const navigate = useNavigate();
 
-  const [formData, setFormData] = useState({
-    identifier: "",
-    username: "",
-    email: "",
-    password: "",
-  });
+  const [formData, setFormData] = useState(
+    isAddBook
+      ? {
+          isbn: "",
+          book_image: "",
+          title: "",
+          author: "",
+          publisher: "",
+          published_at: "",
+          price: "",
+        }
+      : {
+          identifier: "",
+          username: "",
+          email: "",
+          password: "",
+        }
+  );
 
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
@@ -26,20 +43,41 @@ const Form = ({ mode = "login", onSubmit }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { identifier, username, email, password } = formData;
+
+    const missingFields = [];
+
+    if (isAddBook) {
+      const required = [
+        "isbn",
+        "title",
+        "author",
+        "publisher",
+        "published_at",
+        "price",
+      ];
+      required.forEach((key) => {
+        if (!formData[key]) missingFields.push(key.replace(/_/g, " "));
+      });
+    } else if (isLogin) {
+      if (!formData.identifier) missingFields.push("username or email");
+      if (!formData.password) missingFields.push("password");
+    } else if (isRegister) {
+      if (!formData.username) missingFields.push("username");
+      if (!formData.email) missingFields.push("email");
+      if (!formData.password) missingFields.push("password");
+    }
+
+    if (missingFields.length > 0) {
+      setErrorMessage(`Please fill in: ${missingFields.join(", ")}`);
+      return;
+    }
 
     try {
       if (isLogin) {
-        if (!identifier || !password) {
-          setErrorMessage("Please enter your username/email and password.");
-          return;
-        }
-
         const result = await loginUser({
-          user_name_or_email: identifier,
-          password,
+          user_name_or_email: formData.identifier,
+          password: formData.password,
         });
-
         localStorage.setItem("token", result.token);
         localStorage.setItem("user_id", result.user_id);
         onSubmit?.(result.profile);
@@ -49,20 +87,31 @@ const Form = ({ mode = "login", onSubmit }) => {
           navigate("/profile");
           window.location.reload();
         }, 1000);
-      } else {
-        if (!username || !email || !password) {
-          setErrorMessage("Please fill in all required fields.");
-          return;
-        }
-
+      } else if (isRegister) {
         const result = await registerUser({
-          user_name: username,
-          email,
-          password,
+          user_name: formData.username,
+          email: formData.email,
+          password: formData.password,
         });
-
         setSuccessMessage(result.message || "Registration successful");
         setTimeout(() => navigate("/login"), 1000);
+      } else if (isAddBook) {
+        const user_id = localStorage.getItem("user_id");
+        const result = await addBook({
+          ...formData,
+          added_by_user_id: user_id,
+        });
+        setSuccessMessage(result.message || "Book added successfully");
+        setFormData({
+          isbn: "",
+          book_image: "",
+          title: "",
+          author: "",
+          publisher: "",
+          published_at: "",
+          price: "",
+        });
+        onSubmit?.(result);
       }
     } catch (err) {
       setErrorMessage(err.message || "Something went wrong. Please try again.");
@@ -72,12 +121,24 @@ const Form = ({ mode = "login", onSubmit }) => {
   return (
     <div className="auth-container">
       <form className="auth-form" onSubmit={handleSubmit}>
-        <AuthForm
-          isLogin={isLogin}
-          formData={formData}
-          handleChange={handleChange}
-          errorMessage={errorMessage}
-          successMessage={successMessage}
+        {isAddBook ? (
+          <BookForm formData={formData} handleChange={handleChange} />
+        ) : (
+          <AuthForm
+            isLogin={isLogin}
+            formData={formData}
+            handleChange={handleChange}
+            errorMessage={errorMessage}
+            successMessage={successMessage}
+          />
+        )}
+        {errorMessage && <div className="error-message">{errorMessage}</div>}
+        {successMessage && (
+          <div className="success-message">{successMessage}</div>
+        )}
+        <Button
+          text={isLogin ? "Login" : isRegister ? "Register" : "Add Book"}
+          className="form-button"
         />
       </form>
     </div>
