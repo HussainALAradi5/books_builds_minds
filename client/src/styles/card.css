@@ -17,8 +17,8 @@
 .card:hover {
   transform: translateY(-6px) scale(1.03);
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.7);
-  background-color: antiquewhite;
   cursor: pointer;
+  font-weight: bold;
 }
 
 .card img.avatar {

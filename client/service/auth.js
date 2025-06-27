@@ -81,7 +81,6 @@ const editUser = async ({ user_id, token, updatedData }) => {
   return parseJSON(response);
 };
 
-// BOOK FUNCTIONS
 
 const addBook = async (bookData) =>
   fetchWithAuth(`${API_URL}/book`, "POST", bookData);

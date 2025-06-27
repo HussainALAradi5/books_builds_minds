@@ -42,7 +42,6 @@ const Form = ({ mode = "login", onSubmit }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const missingFields = [];
 
     if (isAddBook) {
@@ -57,6 +56,10 @@ const Form = ({ mode = "login", onSubmit }) => {
       required.forEach((key) => {
         if (!formData[key]) missingFields.push(key.replace(/_/g, " "));
       });
+
+      if (formData.price && parseFloat(formData.price) < 1) {
+        missingFields.push("invalid price!");
+      }
     } else if (isLogin) {
       if (!formData.identifier) missingFields.push("username or email");
       if (!formData.password) missingFields.push("password");
@@ -121,6 +124,11 @@ const Form = ({ mode = "login", onSubmit }) => {
   return (
     <div className="auth-container">
       <form className="auth-form" onSubmit={handleSubmit}>
+        {errorMessage && <div className="error-message">{errorMessage}</div>}
+        {successMessage && (
+          <div className="success-message">{successMessage}</div>
+        )}
+
         {isAddBook ? (
           <BookForm formData={formData} handleChange={handleChange} />
         ) : (

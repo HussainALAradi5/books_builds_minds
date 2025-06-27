@@ -5,15 +5,7 @@ import "../styles/card.css";
 const Card = ({ type, data }) => {
   const [userData, setUserData] = useState(data || null);
 
-  const fakeBook = {
-    title: "The Lost Code",
-    author: "A. I. Narrator",
-    publisher: "Copilot Press",
-    book_image: "https://covers.openlibrary.org/b/id/10523399-L.jpg",
-  };
-
-  // Normalize book data
-  const book = data || fakeBook;
+  const book = data;
   const bookImage = book.image || book.book_image;
 
   useEffect(() => {
@@ -54,6 +46,7 @@ const Card = ({ type, data }) => {
           )}
           <p>Author: {book.author}</p>
           <p>Publisher: {book.publisher}</p>
+          <p>Price: {book.price} BD</p>
         </>
       )}
     </div>

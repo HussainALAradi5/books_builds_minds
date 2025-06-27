@@ -22,7 +22,9 @@ const AdminPanel = () => {
 
       {showAddForm && (
         <div className="admin-form-wrapper">
-          <Form mode="add-book" />
+          <div className="embedded-form">
+            <Form mode="add-book" />
+          </div>
         </div>
       )}
     </div>

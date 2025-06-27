@@ -1,20 +1,7 @@
-import "../styles/form.css";
-
-const AuthForm = ({
-  isLogin,
-  formData,
-  handleChange,
-  errorMessage,
-  successMessage,
-}) => {
+const AuthForm = ({ isLogin, formData, handleChange }) => {
   return (
     <>
       <h2>{isLogin ? "Login" : "Register"}</h2>
-
-      {errorMessage && <div className="error-message">{errorMessage}</div>}
-      {successMessage && (
-        <div className="success-message">{successMessage}</div>
-      )}
 
       {!isLogin && (
         <>
@@ -55,5 +42,4 @@ const AuthForm = ({
     </>
   );
 };
-
 export default AuthForm;

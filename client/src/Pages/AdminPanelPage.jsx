@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchUserProfile } from "../../service/auth";
 import AdminPanel from "../Components/AdminPanel";
+import "../styles/admin.css";
 
 const AdminPanelPage = () => {
   const [userData, setUserData] = useState(null);
