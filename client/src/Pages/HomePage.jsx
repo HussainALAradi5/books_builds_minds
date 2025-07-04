@@ -58,8 +58,11 @@ const HomePage = () => {
 
   return (
     <div className="homepage">
-      <Button text="Search Books" onClick={() => setShowSearchForm(true)} />
-
+      <Button
+        text="Search Books"
+        onClick={() => setShowSearchForm(true)}
+        className="search-trigger-button"
+      />
       {showSearchForm && (
         <SearchForm
           formData={searchQuery}

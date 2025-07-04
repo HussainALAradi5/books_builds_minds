@@ -1,4 +1,3 @@
-/* 🔼 Fill-from-bottom animation */
 .button {
   position: relative;
   overflow: hidden;
@@ -66,6 +65,13 @@
   transform: none;
 }
 
+.form-button::before {
+  display: none !important;
+}
+
 .form-button:active {
   transform: none;
+}
+.search-trigger-button {
+  color: black;
 }
