@@ -1,10 +1,10 @@
+/* 🔐 Auth layout */
 .auth-container {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
   min-width: 100vw;
- 
 }
 
 .auth-form {
@@ -31,6 +31,7 @@
   border: 1px solid #ddd;
   border-radius: 5px;
   font-size: 1rem;
+  color: black;
 }
 
 .auth-form input:focus {
@@ -38,14 +39,111 @@
   outline: none;
 }
 
+/* 🌌 Popup backdrop */
+.search-popup-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.35);
+  z-index: 998;
+  animation: fadeIn 0.25s ease;
+}
 
+/* 📦 Popup form */
+.search-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 999;
+  background: #fff;
+  padding: 2.5rem;
+  border-radius: 12px;
+  max-width: 700px;
+  width: 90%;
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.2);
+  border: 1px solid #e0e0e0;
+  animation: popupIn 0.25s ease forwards;
+}
 
-.toggle {
-  margin-top: 1rem;
+.search-title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+  color: #333;
   text-align: center;
-  color: #007bff;
+}
+
+/* 🧱 Form input grid */
+.search-fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.search-fields input {
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  min-width: 220px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  color: black;
+  background-color: #fff;
+}
+
+.search-fields input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+  outline: none;
+}
+
+.form-actions {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.form-button {
+  background-color: royalblue;
+  color: white;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
   cursor: pointer;
-  font-size: 0.95rem;
+  transition: background-color 0.25s ease, transform 0.2s ease;
+}
+
+.form-button:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+}
+
+.form-button:active {
+  transform: scale(0.95);
+}
+
+@keyframes popupIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -40%) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .error-message {
@@ -65,5 +163,13 @@
   padding: 0.75rem 1rem;
   margin-bottom: 1rem;
   border-radius: 5px;
+  font-size: 0.95rem;
+}
+
+.toggle {
+  margin-top: 1rem;
+  text-align: center;
+  color: #007bff;
+  cursor: pointer;
   font-size: 0.95rem;
 }
