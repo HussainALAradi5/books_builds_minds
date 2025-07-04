@@ -5,7 +5,7 @@ const SearchForm = ({
   formData,
   handleChange,
   handleReset,
-  handleSubmit,
+  handleSearch,
   onClose,
 }) => {
   return (
@@ -15,7 +15,7 @@ const SearchForm = ({
       <div className="search-popup">
         <h2 className="search-title">Find Your Book</h2>
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={(e) => e.preventDefault()}>
           <div className="search-fields">
             <input
               type="text"
@@ -48,7 +48,11 @@ const SearchForm = ({
           </div>
 
           <div className="form-actions">
-            <Button text="Search" className="form-button" type="submit" />
+            <Button
+              text="Search"
+              className="form-button"
+              onClick={handleSearch}
+            />
             <Button
               text="Clear"
               className="form-button"
