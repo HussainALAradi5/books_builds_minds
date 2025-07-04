@@ -13,7 +13,7 @@ const AdminPanelPage = () => {
     const token = localStorage.getItem("token");
 
     if (!userId || !token) {
-      navigate("/"); // Not logged in
+      navigate("/"); 
       return;
     }
 
