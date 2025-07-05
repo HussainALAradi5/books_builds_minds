@@ -9,7 +9,7 @@ import {
   matchExact,
   matchPrice,
   clearedFields,
-} from "../utils/searchUtils";
+} from "../utilities/searchUtils";
 
 const Search = ({ books, setFilteredBooks }) => {
   const [formData, setFormData] = useState({ ...clearedFields });
@@ -43,8 +43,7 @@ const Search = ({ books, setFilteredBooks }) => {
       <Button
         text={
           <>
-            <FaSearch style={{ marginRight: "6px" }} />
-            Search Books
+            <FaSearch />
           </>
         }
         className="search-trigger-button"
