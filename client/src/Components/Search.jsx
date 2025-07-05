@@ -3,6 +3,7 @@ import "../styles/form.css";
 import "../styles/button.css";
 import Button from "./Button";
 import SearchForm from "./SearchForm";
+import { FaSearch } from "react-icons/fa";
 
 const Search = ({ books, setFilteredBooks }) => {
   const [formData, setFormData] = useState({
@@ -54,7 +55,12 @@ const Search = ({ books, setFilteredBooks }) => {
   return (
     <>
       <Button
-        text="Search Books"
+        text={
+          <>
+            <FaSearch style={{ marginRight: "6px" }} />
+            Search Books
+          </>
+        }
         className="search-trigger-button"
         onClick={() => setVisible(true)}
       />
