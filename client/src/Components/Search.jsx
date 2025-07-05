@@ -1,38 +1,26 @@
 import { useState } from "react";
+import { FaSearch } from "react-icons/fa";
 import "../styles/form.css";
 import "../styles/button.css";
 import Button from "./Button";
 import SearchForm from "./SearchForm";
-import { FaSearch } from "react-icons/fa";
+import {
+  normalize,
+  matchExact,
+  matchPrice,
+  clearedFields,
+} from "../utils/searchUtils";
 
 const Search = ({ books, setFilteredBooks }) => {
-  const [formData, setFormData] = useState({
-    title: "",
-    isbn: "",
-    publisher: "",
-    price: "",
-  });
-
+  const [formData, setFormData] = useState({ ...clearedFields });
   const [visible, setVisible] = useState(false);
-
-  const normalize = (str) => str?.toLowerCase().trim();
-  const matchExact = (input, value) => (input ? value === input : true);
-  const matchPrice = (input, value) =>
-    input ? String(value) === String(input) : true;
 
   const handleSearch = () => {
     const filtered = books.filter((book) => {
-      const bookTitle = normalize(book.title);
-      const bookIsbn = normalize(book.isbn);
-      const bookPublisher = normalize(book.publisher);
-      const inputTitle = normalize(formData.title);
-      const inputIsbn = normalize(formData.isbn);
-      const inputPublisher = normalize(formData.publisher);
-
       return (
-        matchExact(inputTitle, bookTitle) &&
-        matchExact(inputIsbn, bookIsbn) &&
-        matchExact(inputPublisher, bookPublisher) &&
+        matchExact(normalize(formData.title), normalize(book.title)) &&
+        matchExact(normalize(formData.isbn), normalize(book.isbn)) &&
+        matchExact(normalize(formData.publisher), normalize(book.publisher)) &&
         matchPrice(formData.price, book.price)
       );
     });
@@ -41,14 +29,12 @@ const Search = ({ books, setFilteredBooks }) => {
     setVisible(false);
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  const handleChange = ({ target: { name, value } }) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleReset = () => {
-    const cleared = { title: "", isbn: "", publisher: "", price: "" };
-    setFormData(cleared);
+    setFormData({ ...clearedFields });
     setFilteredBooks(books);
   };
 

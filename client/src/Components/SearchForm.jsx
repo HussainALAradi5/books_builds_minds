@@ -1,5 +1,5 @@
-import "../styles/form.css";
 import Button from "./Button";
+import "../styles/form.css";
 
 const SearchForm = ({
   formData,
@@ -8,6 +8,13 @@ const SearchForm = ({
   handleSearch,
   onClose,
 }) => {
+  const fields = [
+    { name: "title", type: "text", placeholder: "Title" },
+    { name: "isbn", type: "text", placeholder: "ISBN" },
+    { name: "publisher", type: "text", placeholder: "Publisher" },
+    { name: "price", type: "number", placeholder: "Price" },
+  ];
+
   return (
     <>
       <div className="search-popup-backdrop" onClick={onClose}></div>
@@ -17,34 +24,16 @@ const SearchForm = ({
 
         <form onSubmit={(e) => e.preventDefault()}>
           <div className="search-fields">
-            <input
-              type="text"
-              name="title"
-              value={formData.title}
-              onChange={handleChange}
-              placeholder="Title"
-            />
-            <input
-              type="text"
-              name="isbn"
-              value={formData.isbn}
-              onChange={handleChange}
-              placeholder="ISBN"
-            />
-            <input
-              type="text"
-              name="publisher"
-              value={formData.publisher}
-              onChange={handleChange}
-              placeholder="Publisher"
-            />
-            <input
-              type="number"
-              name="price"
-              value={formData.price}
-              onChange={handleChange}
-              placeholder="Price"
-            />
+            {fields.map(({ name, type, placeholder }) => (
+              <input
+                key={name}
+                type={type}
+                name={name}
+                value={formData[name]}
+                onChange={handleChange}
+                placeholder={placeholder}
+              />
+            ))}
           </div>
 
           <div className="form-actions">
