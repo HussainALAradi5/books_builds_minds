@@ -75,3 +75,80 @@
 .search-trigger-button {
   color: black;
 }
+
+review-submit-button {
+  background-color: seagreen;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 24px;
+  font-size: 1rem;
+  margin-top: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.review-submit-button:hover {
+  background-color: mediumseagreen;
+}
+
+.review-edit-button {
+  background-color: #1e90ff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.review-edit-button:hover {
+  background-color: #4682b4;
+}
+
+.review-delete-button {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.review-delete-button:hover {
+  background-color: #a71d2a;
+}
+
+.purchase-button {
+  background-color: goldenrod;
+  color: black;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-top: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.purchase-button:hover {
+  background-color: darkgoldenrod;
+}
+
+.purchase-status {
+  font-weight: bold;
+  color: forestgreen;
+  margin-top: 1rem;
+}
+
+.purchase-message {
+  margin-top: 0.5rem;
+  font-size: 0.95rem;
+  color: #444;
+}

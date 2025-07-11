@@ -7,6 +7,7 @@ import Footer from "./Footer";
 import ProfilePage from "../Pages/ProfilePage";
 import AdminPanelPage from "../Pages/AdminPanelPage";
 import BookPage from "../Pages/BookPage";
+import ReviewPage from "../Pages/ReviewPage";
 
 const MainContainer = () => {
   return (
@@ -20,6 +21,7 @@ const MainContainer = () => {
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/admin" element={<AdminPanelPage />} />
           <Route path="/book/:slug" element={<BookPage />} />
+          <Route path="/book/:slug/reviews" element={<ReviewPage />} />
         </Routes>
         <Footer />
       </div>

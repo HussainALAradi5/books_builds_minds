@@ -99,6 +99,26 @@ const purchaseBook = async (slug) =>
 const fetchPurchasedBooks = async (user_id) =>
   fetchWithAuth(`${API_URL}/profile/${user_id}/books`, "GET");
 
+const fetchBookReviews = async (slug) => {
+  const response = await fetch(`${API_URL}/book/${slug}/review/`, {
+    method: "GET",
+  });
+  return parseJSON(response);
+};
+
+const addReview = async (slug, reviewData) =>
+  fetchWithAuth(`${API_URL}/book/${slug}/review`, "POST", reviewData);
+
+const editReview = async (slug, review_id, updatedData) =>
+  fetchWithAuth(
+    `${API_URL}/book/${slug}/review/${review_id}`,
+    "PUT",
+    updatedData
+  );
+
+const deleteReview = async (slug, review_id) =>
+  fetchWithAuth(`${API_URL}/book/${slug}/review/${review_id}`, "DELETE");
+
 export {
   registerUser,
   loginUser,
@@ -109,4 +129,8 @@ export {
   fetchBookSlug,
   purchaseBook,
   fetchPurchasedBooks,
+  fetchBookReviews,
+  addReview,
+  editReview,
+  deleteReview,
 };

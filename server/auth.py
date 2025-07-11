@@ -277,11 +277,20 @@ def add_review(slug):
             "Unauthorized: You can only review books you have purchased", 403
         )
 
+    # 👇 NEW: Prevent duplicate review for this book
+    existing_review = Review.query.filter_by(
+        user_id=user_id, book_id=book.book_id
+    ).first()
+    if existing_review:
+        return error_response("You have already reviewed this book", 400)
+
     data = request.json
     rating = data.get("rating")
     comment_text = data.get("comment")
+
     if rating is None or not (0 <= rating <= 5):
         return error_response("Invalid rating. Must be between 0 and 5", 400)
+
     if not comment_text or len(comment_text.strip()) < 10:
         print(f"Received comment: {comment_text} (Length: {len(comment_text.strip())})")
         return error_response("Review text must be at least 10 characters", 400)

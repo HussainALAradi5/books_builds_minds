@@ -21,10 +21,9 @@ from auth import (
     edit_review,
     delete_review,
 )
-from flask_cors import CORS
 
 with app.app_context():
-    db.create_all()  # Automatically creates missing tables
+    db.create_all()
 
 
 @app.route("/", methods=["GET"])
@@ -78,12 +77,12 @@ def create_review(slug):
 
 
 @app.route("/book/<string:slug>/review/<int:review_id>", methods=["PUT"])
-def update_review(review_id):
+def update_review(slug, review_id):
     return edit_review(review_id)
 
 
 @app.route("/book/<string:slug>/review/<int:review_id>", methods=["DELETE"])
-def remove_review(review_id):
+def remove_review(slug, review_id):
     return delete_review(review_id)
 
 
