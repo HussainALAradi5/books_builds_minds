@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { fetchUserProfile } from "../../service/auth";
 import UserDetails from "./UserDetails";
 import BookDetails from "./BookDetails";
@@ -6,6 +7,7 @@ import "../styles/card.css";
 
 const Card = ({ type, data }) => {
   const [userData, setUserData] = useState(data || null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (type === "user" && !data) {
@@ -20,8 +22,18 @@ const Card = ({ type, data }) => {
     }
   }, [type, data]);
 
+  const handleClick = () => {
+    if (type === "book" && data?.slug) {
+      navigate(`/book/${data.slug}`);
+    }
+  };
+
   return (
-    <div className="card">
+    <div
+      className="card"
+      onClick={handleClick}
+      style={{ cursor: type === "book" ? "pointer" : "default" }}
+    >
       {type === "user" && <UserDetails user={userData} />}
       {type === "book" && <BookDetails book={data} />}
     </div>

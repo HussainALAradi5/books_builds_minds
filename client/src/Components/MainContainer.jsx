@@ -6,6 +6,7 @@ import Header from "./Header";
 import Footer from "./Footer";
 import ProfilePage from "../Pages/ProfilePage";
 import AdminPanelPage from "../Pages/AdminPanelPage";
+import BookPage from "../Pages/BookPage";
 
 const MainContainer = () => {
   return (
@@ -18,6 +19,7 @@ const MainContainer = () => {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/admin" element={<AdminPanelPage />} />
+          <Route path="/book/:slug" element={<BookPage />} />
         </Routes>
         <Footer />
       </div>

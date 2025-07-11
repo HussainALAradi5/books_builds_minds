@@ -21,7 +21,7 @@ const ProfilePage = () => {
       .then(setUserData)
       .catch((err) => {
         console.error("Failed to fetch user details:", err.message);
-        navigate("/"); 
+        navigate("/");
       });
   }, [navigate]);
 

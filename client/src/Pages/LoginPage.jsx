@@ -1,7 +1,6 @@
 import Form from "../Components/Form";
 
 const LoginPage = () => {
-
   return (
     <div>
       <Form mode="login" />

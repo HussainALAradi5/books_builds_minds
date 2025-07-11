@@ -1,6 +1,5 @@
 const API_URL = import.meta.env.VITE_API_URL;
 
-// Utility to handle JSON parsing and error extraction
 const parseJSON = async (response) => {
   const data = await response.json();
   if (!response.ok) {
@@ -9,7 +8,6 @@ const parseJSON = async (response) => {
   return data;
 };
 
-// Reusable auth header utility
 const getAuthHeaders = () => {
   const token = localStorage.getItem("token");
   return {
@@ -18,7 +16,6 @@ const getAuthHeaders = () => {
   };
 };
 
-// Reusable authenticated request
 const fetchWithAuth = async (url, method = "GET", body = null) => {
   const options = {
     method,
@@ -30,8 +27,6 @@ const fetchWithAuth = async (url, method = "GET", body = null) => {
   const response = await fetch(url, options);
   return parseJSON(response);
 };
-
-// USER FUNCTIONS
 
 const registerUser = async ({ user_name, email, password }) => {
   const response = await fetch(`${API_URL}/register`, {
@@ -81,24 +76,25 @@ const editUser = async ({ user_id, token, updatedData }) => {
   return parseJSON(response);
 };
 
-
 const addBook = async (bookData) =>
   fetchWithAuth(`${API_URL}/book`, "POST", bookData);
 
 const fetchAllBooks = async () => {
-  const response = await fetch(`${API_URL}/`); 
+  const response = await fetch(`${API_URL}/`);
   return parseJSON(response);
 };
 
-const fetchBookById = async (book_id) => {
-  const response = await fetch(`${API_URL}/book/${book_id}`, {
+const fetchBookSlug = async (slug) => {
+  console.log("slug:", slug);
+
+  const response = await fetch(`${API_URL}/book/${slug}`, {
     method: "GET",
   });
   return parseJSON(response);
 };
 
-const purchaseBook = async (book_id) =>
-  fetchWithAuth(`${API_URL}/book/${book_id}/purchase`, "POST");
+const purchaseBook = async (slug) =>
+  fetchWithAuth(`${API_URL}/book/${slug}/purchase`, "POST");
 
 const fetchPurchasedBooks = async (user_id) =>
   fetchWithAuth(`${API_URL}/profile/${user_id}/books`, "GET");
@@ -110,7 +106,7 @@ export {
   editUser,
   addBook,
   fetchAllBooks,
-  fetchBookById,
+  fetchBookSlug,
   purchaseBook,
   fetchPurchasedBooks,
 };
