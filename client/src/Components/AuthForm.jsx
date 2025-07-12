@@ -1,6 +1,6 @@
-const AuthForm = ({ isLogin, formData, handleChange }) => {
+const AuthForm = ({ isLogin, formData, handleChange, onSubmit }) => {
   return (
-    <>
+    <form className="auth-form" onSubmit={onSubmit}>
       <h2>{isLogin ? "Login" : "Register"}</h2>
 
       {!isLogin && (
@@ -39,7 +39,14 @@ const AuthForm = ({ isLogin, formData, handleChange }) => {
         onChange={handleChange}
         placeholder="Password"
       />
-    </>
+
+      <div className="form-actions">
+        <button type="submit" className="form-button">
+          {isLogin ? "Login" : "Register"}
+        </button>
+      </div>
+    </form>
   );
 };
+
 export default AuthForm;

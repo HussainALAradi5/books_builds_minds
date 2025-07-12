@@ -85,8 +85,6 @@ const fetchAllBooks = async () => {
 };
 
 const fetchBookSlug = async (slug) => {
-  console.log("slug:", slug);
-
   const response = await fetch(`${API_URL}/book/${slug}`, {
     method: "GET",
   });
@@ -96,8 +94,13 @@ const fetchBookSlug = async (slug) => {
 const purchaseBook = async (slug) =>
   fetchWithAuth(`${API_URL}/book/${slug}/purchase`, "POST");
 
-const fetchPurchasedBooks = async (user_id) =>
-  fetchWithAuth(`${API_URL}/profile/${user_id}/books`, "GET");
+const fetchPurchasedBooks = async (user_id) => {
+  const response = await fetch(`${API_URL}/profile/${user_id}/books`, {
+    method: "GET",
+    headers: getAuthHeaders(),
+  });
+  return parseJSON(response);
+};
 
 const fetchBookReviews = async (slug) => {
   const response = await fetch(`${API_URL}/book/${slug}/review/`, {

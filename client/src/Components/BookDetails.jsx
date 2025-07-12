@@ -1,5 +1,6 @@
 import "../styles/book.css";
 import formatPublishedDate from "../utilities/formatDate";
+import { FaCheck, FaTimesCircle } from "react-icons/fa";
 
 const BookDetails = ({ book, hasPurchased }) => {
   const publishAt = formatPublishedDate(book.published_at);
@@ -12,11 +13,11 @@ const BookDetails = ({ book, hasPurchased }) => {
           {book.title}
           {hasPurchased ? (
             <span className="purchased-badge">
-              <i className="fas fa-check"></i> Purchased
+              <FaCheck /> Purchased
             </span>
           ) : (
             <span className="not-purchased-badge">
-              <i className="fas fa-times-circle"></i> Not Purchased
+              <FaTimesCircle /> Not Purchased
             </span>
           )}
         </h1>

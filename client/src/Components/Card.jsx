@@ -35,7 +35,9 @@ const Card = ({ type, data }) => {
       style={{ cursor: type === "book" ? "pointer" : "default" }}
     >
       {type === "user" && <UserDetails user={userData} />}
-      {type === "book" && <BookDetails book={data} />}
+      {type === "book" && (
+        <BookDetails book={data} hasPurchased={data.hasPurchased} />
+      )}
     </div>
   );
 };
