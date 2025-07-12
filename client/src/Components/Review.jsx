@@ -50,14 +50,18 @@ const Review = ({ slug, hasPurchased }) => {
     let timer;
     if (showConfirmPopup && countdown > 0) {
       timer = setTimeout(() => setCountdown((c) => c - 1), 1000);
-    } else if (countdown === 0) {
-      handleDelete();
     }
     return () => clearTimeout(timer);
   }, [showConfirmPopup, countdown]);
 
   return (
     <div className="review-wrapper">
+      {hasPurchased &&
+        userHasReviewed &&
+        !showFormPopup &&
+        !editingReviewData && (
+          <p className="review-warning">You've already reviewed this book.</p>
+        )}
       <h2 className="review-heading">Book Reviews</h2>
 
       {loading ? (
@@ -111,13 +115,6 @@ const Review = ({ slug, hasPurchased }) => {
         />
       )}
 
-      {hasPurchased &&
-        userHasReviewed &&
-        !showFormPopup &&
-        !editingReviewData && (
-          <p className="review-warning">You've already reviewed this book.</p>
-        )}
-
       {showFormPopup && (
         <>
           <div
@@ -152,9 +149,11 @@ const Review = ({ slug, hasPurchased }) => {
             <div className="form-actions">
               <Button
                 text="Yes, Delete Now"
+                disabled={countdown > 0}
                 className="form-button"
-                onClick={() => setCountdown(0)}
+                onClick={handleDelete}
               />
+
               <Button
                 text="Cancel"
                 className="form-button"
