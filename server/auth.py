@@ -206,7 +206,10 @@ def purchase_book(slug):
     token = request.headers.get("Authorization")
     user_id = validate_token(token)
     if not user_id:
-        return error_response("Invalid or missing token", 401)
+        return error_response(
+            "You must either, login or register and login in order to purcahse this book",
+            401,
+        )
 
     book = Book.query.filter_by(slug=slug).first()
     if not book:

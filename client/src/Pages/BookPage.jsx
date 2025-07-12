@@ -1,6 +1,10 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { fetchBookSlug, fetchPurchasedBooks } from "../../service/auth";
+import {
+  fetchBookSlug,
+  fetchPurchasedBooks,
+  isUserLoggedIn,
+} from "../../service/auth";
 import BookDetails from "../Components/BookDetails";
 import Review from "../Components/Review";
 import Button from "../Components/Button";
@@ -14,31 +18,30 @@ const BookPage = () => {
   const [error, setError] = useState("");
   const [hasPurchased, setHasPurchased] = useState(false);
   const [purchaseMessage, setPurchaseMessage] = useState("");
-  const user_id = localStorage.getItem("user_id");
 
   useEffect(() => {
-    fetchBookSlug(slug)
-      .then((data) => {
+    const fetchBookData = async () => {
+      try {
+        const data = await fetchBookSlug(slug);
         setBook(data);
         setError("");
-        checkPurchaseStatus(data?.slug);
-      })
-      .catch((err) => {
+
+        if (isUserLoggedIn()) {
+          const userId = localStorage.getItem("user_id");
+          const result = await fetchPurchasedBooks(userId);
+          const match = result.books?.some((b) => b.slug === slug);
+          setHasPurchased(match);
+        }
+      } catch (err) {
         console.error("Failed to fetch book:", err);
         setError("Failed to load book details.");
-      })
-      .finally(() => setLoading(false));
-  }, [slug]);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const checkPurchaseStatus = async (slug) => {
-    try {
-      const result = await fetchPurchasedBooks(user_id);
-      const match = result.books?.some((b) => b.slug === slug);
-      setHasPurchased(match);
-    } catch (err) {
-      console.error("Failed to check purchase status:", err);
-    }
-  };
+    fetchBookData();
+  }, [slug]);
 
   const handlePurchase = async () => {
     try {
@@ -71,7 +74,8 @@ const BookPage = () => {
           ) : book ? (
             <>
               <BookDetails book={book} hasPurchased={hasPurchased} />
-              {!hasPurchased && (
+
+              {isUserLoggedIn() && !hasPurchased && (
                 <Button
                   text={
                     <>
@@ -82,11 +86,12 @@ const BookPage = () => {
                   className="purchase-button"
                 />
               )}
-              {purchaseMessage && (
+
+              {isUserLoggedIn() && purchaseMessage && (
                 <p className="purchase-message">{purchaseMessage}</p>
               )}
+
               <Review slug={slug} hasPurchased={hasPurchased} />
-         
             </>
           ) : (
             <p>No book found.</p>

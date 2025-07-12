@@ -1,9 +1,11 @@
 import "../styles/book.css";
 import formatPublishedDate from "../utilities/formatDate";
 import { FaCheck, FaTimesCircle } from "react-icons/fa";
+import { isUserLoggedIn } from "../../service/auth";
 
 const BookDetails = ({ book, hasPurchased }) => {
   const publishAt = formatPublishedDate(book.published_at);
+  const isLoggedIn = isUserLoggedIn();
 
   return (
     <div className="book-info">
@@ -11,11 +13,12 @@ const BookDetails = ({ book, hasPurchased }) => {
       <div className="book-meta">
         <h1 className="book-title">
           {book.title}
-          {hasPurchased ? (
+          {isLoggedIn && hasPurchased && (
             <span className="purchased-badge">
               <FaCheck /> Purchased
             </span>
-          ) : (
+          )}
+          {isLoggedIn && !hasPurchased && (
             <span className="not-purchased-badge">
               <FaTimesCircle /> Not Purchased
             </span>

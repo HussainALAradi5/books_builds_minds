@@ -28,6 +28,12 @@ const fetchWithAuth = async (url, method = "GET", body = null) => {
   return parseJSON(response);
 };
 
+const isUserLoggedIn = () => {
+  const token = localStorage.getItem("token");
+  const userId = localStorage.getItem("user_id");
+  return Boolean(token && userId);
+};
+
 const registerUser = async ({ user_name, email, password }) => {
   const response = await fetch(`${API_URL}/register`, {
     method: "POST",
@@ -50,6 +56,7 @@ const loginUser = async ({ user_name_or_email, password }) => {
   localStorage.setItem("token", data.token);
   localStorage.setItem("user_id", data.user_id);
   localStorage.setItem("is_admin", profile.is_admin);
+  localStorage.setItem("username", profile.user_name);
 
   return { ...data, profile };
 };
@@ -102,6 +109,7 @@ const fetchPurchasedBooks = async (user_id) => {
   return parseJSON(response);
 };
 
+// 📝 Reviews
 const fetchBookReviews = async (slug) => {
   const response = await fetch(`${API_URL}/book/${slug}/review/`, {
     method: "GET",
@@ -136,4 +144,5 @@ export {
   addReview,
   editReview,
   deleteReview,
+  isUserLoggedIn, 
 };
