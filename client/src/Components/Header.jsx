@@ -1,10 +1,13 @@
 import "../styles/header.css";
 import Button from "./Button";
-import { useNavigate } from "react-router-dom";
+import Search from "./Search";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-const Header = () => {
+const Header = ({ books, setFilteredBooks }) => {
   const navigate = useNavigate();
+  const location = useLocation();
+
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
 
@@ -31,46 +34,52 @@ const Header = () => {
 
   return (
     <div className="header-container">
-      <Button
-        text="Homepage"
-        onClick={() => navigate("/")}
-        className="header-button"
-      />
+      <div className="header">
+        <Button
+          text="Homepage"
+          onClick={() => navigate("/")}
+          className="header-button"
+        />
 
-      {isLoggedIn ? (
-        <>
-          <Button
-            text="Profile"
-            onClick={() => navigate("/profile")}
-            className="header-button"
-          />
-          {isAdmin && (
+        {isLoggedIn ? (
+          <>
             <Button
-              text="Admin Panel"
-              onClick={() => navigate("/admin")}
+              text="Profile"
+              onClick={() => navigate("/profile")}
               className="header-button"
             />
-          )}
-          <Button
-            text="Logout"
-            onClick={handleLogout}
-            className="header-button"
-          />
-        </>
-      ) : (
-        <>
-          <Button
-            text="Login"
-            onClick={() => navigate("/login")}
-            className="header-button"
-          />
-          <Button
-            text="Register"
-            onClick={() => navigate("/register")}
-            className="header-button"
-          />
-        </>
-      )}
+            {isAdmin && (
+              <Button
+                text="Admin Panel"
+                onClick={() => navigate("/admin")}
+                className="header-button"
+              />
+            )}
+            <Button
+              text="Logout"
+              onClick={handleLogout}
+              className="header-button"
+            />
+          </>
+        ) : (
+          <>
+            <Button
+              text="Login"
+              onClick={() => navigate("/login")}
+              className="header-button"
+            />
+            <Button
+              text="Register"
+              onClick={() => navigate("/register")}
+              className="header-button"
+            />
+          </>
+        )}
+
+        {location.pathname === "/" && (
+          <Search books={books} setFilteredBooks={setFilteredBooks} />
+        )}
+      </div>
     </div>
   );
 };

@@ -14,7 +14,6 @@ const BookPage = () => {
   const [error, setError] = useState("");
   const [hasPurchased, setHasPurchased] = useState(false);
   const [purchaseMessage, setPurchaseMessage] = useState("");
-
   const user_id = localStorage.getItem("user_id");
 
   useEffect(() => {
@@ -52,7 +51,6 @@ const BookPage = () => {
           },
         }
       );
-
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to purchase");
       setHasPurchased(true);
@@ -65,33 +63,35 @@ const BookPage = () => {
   return (
     <div className="book-page">
       <div className="book-details-container">
-        {loading ? (
-          <p>Loading book...</p>
-        ) : error ? (
-          <p className="error">{error}</p>
-        ) : book ? (
-          <>
-            <BookDetails book={book} />
-
-            {!hasPurchased ? (
-              <Button
-                text="Purchase Book"
-                onClick={handlePurchase}
-                className="purchase-button"
-              />
-            ) : (
-              <p className="purchase-status">✅ Already purchased</p>
-            )}
-
-            {purchaseMessage && (
-              <p className="purchase-message">{purchaseMessage}</p>
-            )}
-
-            <Review slug={slug} />
-          </>
-        ) : (
-          <p>No book found.</p>
-        )}
+        <div className="book-center-wrapper">
+          {loading ? (
+            <p>Loading book...</p>
+          ) : error ? (
+            <p className="error">{error}</p>
+          ) : book ? (
+            <>
+              <BookDetails book={book} hasPurchased={hasPurchased} />
+              {!hasPurchased && (
+                <Button
+                  text={
+                    <>
+                      <i className="fas fa-shopping-cart"></i> Purchase Book
+                    </>
+                  }
+                  onClick={handlePurchase}
+                  className="purchase-button"
+                />
+              )}
+              {purchaseMessage && (
+                <p className="purchase-message">{purchaseMessage}</p>
+              )}
+              <Review slug={slug} hasPurchased={hasPurchased} />
+         
+            </>
+          ) : (
+            <p>No book found.</p>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -1,12 +1,52 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 html,
-body,
-#root {
+body {
   margin: 0;
   padding: 0;
   width: 100%;
   height: 100%;
-  color: whitesmoke;
-  background: #f0f2f5;
-  font-family: "Segoe UI", "Roboto", Arial, sans-serif;
-  /* overflow: hidden; */
+  font-family: "Inter", "Segoe UI", "Roboto", sans-serif;
+  background-color: whitesmoke;
+  color: #2c2c2c;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.content {
+  flex: 1;
+  padding-top: 80px; 
+  padding-bottom: 40px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+a {
+  text-decoration: none;
+  color: royalblue;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: darkblue;
+}
+
+button {
+  font-family: inherit;
 }

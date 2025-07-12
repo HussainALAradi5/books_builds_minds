@@ -1,23 +1,27 @@
+/* 🧱 Main header container */
 .header-container {
-  padding: 15px 10px 15px 10px;
   position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
-  box-shadow: 0 2px 12px rgba(245, 245, 245, 0.515);
   background-color: midnightblue;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  z-index: 100;
 }
+
 
 .header {
   display: flex;
-  justify-content: flex-end; 
-  align-items: center; 
+  align-items: center;
+  justify-content: flex-start; 
   padding: 15px 30px;
-  background-color: midnightblue;
-  box-shadow: 0 2px 12px rgba(245, 245, 245, 0.515);
-  position: fixed;
   width: 100%;
+  overflow-x: auto; 
 }
 
-.header:hover {
-  background-color: olivedrab;
-  transition: background-color 1.5s ease;
+
+
+.header-button {
+  margin-right: 12px;
+  white-space: nowrap;
 }

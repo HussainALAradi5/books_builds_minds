@@ -4,46 +4,68 @@
   background-color: transparent;
   color: white;
   padding: 12px 24px;
-  border: 2px solid royalblue;
   border-radius: 8px;
   cursor: pointer;
   font-size: 1rem;
   font-weight: 500;
-  transition: transform 0.2s ease;
+  transition: color 0.3s ease, background-color 0.3s ease, transform 0.2s ease;
   z-index: 0;
-}
-
-.button::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-color: olivedrab;
-  transform: translateY(100%);
-  transition: transform 0.4s ease;
-  z-index: -1;
-}
-
-.button:hover::before {
-  transform: translateY(0%);
-}
-
-.button span {
-  position: relative;
-  z-index: 1;
-}
-
-.button:hover {
-  color: white;
-  transform: translateY(-2px);
-  transition: transform 0.2s ease, color 0.4s ease;
-}
-
-.button:active {
-  transform: scale(0.8);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .header-button {
-  margin: 0 8px;
+  border: 2px solid royalblue;
+}
+
+.header-button::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 0%;
+  background-color: olivedrab;
+  z-index: -1;
+  transition: height 0.3s ease;
+}
+
+.header-button:hover::before {
+  height: 100%;
+}
+
+.header-button:hover {
+  color: white;
+}
+
+.header-button:active {
+  transform: scale(0.96);
+}
+
+.search-trigger-button {
+  background-color: white;
+  color: royalblue;
+  border: 2px solid royalblue;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.search-trigger-button:hover {
+  background-color: royalblue;
+  color: white;
+}
+
+.search-trigger-button:active {
+  transform: scale(0.96);
 }
 
 .form-button {
@@ -53,102 +75,49 @@
   border: none;
   border-radius: 8px;
   font-size: 1rem;
-  font-weight: 500;
-  width: 100%;
-  margin-top: 1rem;
+  font-weight: 600;
   cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .form-button:hover {
-  background-color: royalblue;
-  color: white;
-  transform: none;
-}
-
-.form-button::before {
-  display: none !important;
+  background-color: #2c55d4;
 }
 
 .form-button:active {
-  transform: none;
-}
-.search-trigger-button {
-  color: black;
-}
-
-review-submit-button {
-  background-color: seagreen;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 24px;
-  font-size: 1rem;
-  margin-top: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.review-submit-button:hover {
-  background-color: mediumseagreen;
-}
-
-.review-edit-button {
-  background-color: #1e90ff;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  padding: 8px 16px;
-  font-size: 0.95rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.review-edit-button:hover {
-  background-color: #4682b4;
-}
-
-.review-delete-button {
-  background-color: #dc3545;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  padding: 8px 16px;
-  font-size: 0.95rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.review-delete-button:hover {
-  background-color: #a71d2a;
+  transform: scale(0.97);
 }
 
 .purchase-button {
-  background-color: goldenrod;
-  color: black;
+  background-color: midnightblue;
+  color: white;
+  padding: 14px 28px;
   border: none;
-  padding: 12px 24px;
   border-radius: 8px;
   font-size: 1rem;
   font-weight: 600;
-  margin-top: 1rem;
-  transition: background-color 0.3s ease;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 10rem;
 }
 
 .purchase-button:hover {
-  background-color: darkgoldenrod;
+  background-color: #232360;
 }
 
-.purchase-status {
-  font-weight: bold;
-  color: forestgreen;
-  margin-top: 1rem;
+.purchase-button:active {
+  transform: scale(0.96);
 }
 
-.purchase-message {
-  margin-top: 0.5rem;
-  font-size: 0.95rem;
-  color: #444;
+.button:disabled,
+.form-button:disabled,
+.purchase-button:disabled,
+.search-trigger-button:disabled,
+.header-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
 }

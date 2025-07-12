@@ -41,11 +41,7 @@ const Search = ({ books, setFilteredBooks }) => {
   return (
     <>
       <Button
-        text={
-          <>
-            <FaSearch />
-          </>
-        }
+        text={<FaSearch />}
         className="search-trigger-button"
         onClick={() => setVisible(true)}
       />

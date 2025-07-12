@@ -1,16 +1,22 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginUser, registerUser, addBook } from "../../service/auth";
+import {
+  loginUser,
+  registerUser,
+  addBook,
+  addReview,
+} from "../../service/auth";
 import AuthForm from "./AuthForm";
 import BookForm from "./BookForm";
-import Button from "./Button";
+import ReviewForm from "./ReviewForm";
 import "../styles/form.css";
 
-const Form = ({ mode = "login", onSubmit }) => {
+const Form = ({ mode = "login", onSubmit, isEditing = false }) => {
+  const navigate = useNavigate();
   const isLogin = mode === "login";
   const isRegister = mode === "register";
   const isAddBook = mode === "add-book";
-  const navigate = useNavigate();
+  const isAddReview = mode === "add-review";
 
   const [formData, setFormData] = useState(
     isAddBook
@@ -22,6 +28,11 @@ const Form = ({ mode = "login", onSubmit }) => {
           publisher: "",
           published_at: "",
           price: "",
+        }
+      : isAddReview
+      ? {
+          rating: 0,
+          comment: "",
         }
       : {
           identifier: "",
@@ -56,7 +67,6 @@ const Form = ({ mode = "login", onSubmit }) => {
       required.forEach((key) => {
         if (!formData[key]) missingFields.push(key.replace(/_/g, " "));
       });
-
       if (formData.price && parseFloat(formData.price) < 1) {
         missingFields.push("invalid price!");
       }
@@ -67,6 +77,16 @@ const Form = ({ mode = "login", onSubmit }) => {
       if (!formData.username) missingFields.push("username");
       if (!formData.email) missingFields.push("email");
       if (!formData.password) missingFields.push("password");
+    } else if (isAddReview) {
+      if (
+        formData.rating === null ||
+        !(0 <= formData.rating && formData.rating <= 5)
+      ) {
+        missingFields.push("valid rating (0–5)");
+      }
+      if (!formData.comment || formData.comment.trim().length < 10) {
+        missingFields.push("valid comment (min 10 chars)");
+      }
     }
 
     if (missingFields.length > 0) {
@@ -85,7 +105,6 @@ const Form = ({ mode = "login", onSubmit }) => {
         localStorage.setItem("is_admin", result.profile.is_admin);
         onSubmit?.(result.profile);
         setSuccessMessage(result.message || "Login successful");
-
         setTimeout(() => {
           navigate("/profile");
           window.location.reload();
@@ -115,6 +134,12 @@ const Form = ({ mode = "login", onSubmit }) => {
           price: "",
         });
         onSubmit?.(result);
+      } else if (isAddReview) {
+        const slug = localStorage.getItem("review_slug");
+        const result = await addReview(slug, formData);
+        setSuccessMessage(result.message || "Review submitted");
+        setFormData({ rating: 0, comment: "" });
+        onSubmit?.(result);
       }
     } catch (err) {
       setErrorMessage(err.message || "Something went wrong. Please try again.");
@@ -123,29 +148,32 @@ const Form = ({ mode = "login", onSubmit }) => {
 
   return (
     <div className="auth-container">
-      <form className="auth-form" onSubmit={handleSubmit}>
-        {errorMessage && <div className="error-message">{errorMessage}</div>}
-        {successMessage && (
-          <div className="success-message">{successMessage}</div>
-        )}
+      {errorMessage && <div className="error-message">{errorMessage}</div>}
+      {successMessage && (
+        <div className="success-message">{successMessage}</div>
+      )}
 
-        {isAddBook ? (
-          <BookForm formData={formData} handleChange={handleChange} />
-        ) : (
-          <AuthForm
-            isLogin={isLogin}
-            formData={formData}
-            handleChange={handleChange}
-            errorMessage={errorMessage}
-            successMessage={successMessage}
-          />
-        )}
-
-        <Button
-          text={isLogin ? "Login" : isRegister ? "Register" : "Add Book"}
-          className="form-button"
+      {isAddBook ? (
+        <BookForm
+          formData={formData}
+          handleChange={handleChange}
+          onSubmit={handleSubmit}
         />
-      </form>
+      ) : isAddReview ? (
+        <ReviewForm
+          formData={formData}
+          handleChange={handleChange}
+          isEditing={isEditing}
+          onSubmit={handleSubmit}
+        />
+      ) : (
+        <AuthForm
+          isLogin={isLogin}
+          formData={formData}
+          handleChange={handleChange}
+          onSubmit={handleSubmit}
+        />
+      )}
     </div>
   );
 };

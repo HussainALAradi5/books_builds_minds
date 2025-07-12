@@ -1,52 +1,149 @@
 .book-page {
   width: 100%;
-  min-height: 80vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #f0f2f5;
-  padding: 3rem 1rem;
+  min-height: 100vh;
+  padding-bottom: 4rem;
+  background-color: whitesmoke;
 }
 
 .book-details-container {
-  background-color: #ffffff;
-  color: #333;
-  padding: 2.5rem;
-  border-radius: 12px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
-  max-width: 700px;
   width: 100%;
+  padding: 2rem;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+}
+
+.book-center-wrapper {
+  max-width: 1000px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.book-info {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.cover {
+  width: 25rem;
+  height: 25rem;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.book-meta {
+  min-width: 250px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 1rem;
+  color: #333;
+  align-items: center;
   text-align: center;
-  transition: box-shadow 0.3s ease;
 }
 
-.book-details-container:hover {
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+.book-meta p {
+  margin: 0;
 }
 
-.book-details-container img.cover {
-  max-width: 220px;
-  height: auto;
-  margin-bottom: 1.5rem;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+.book-meta strong {
+  color: midnightblue;
 }
 
-.book-details-container h3 {
-  font-size: 2.2rem;
+.book-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: midnightblue;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
   margin-bottom: 1rem;
-  font-weight: 600;
+  justify-content: center;
 }
 
-.book-details-container p {
-  font-size: 1.1rem;
-  margin: 0.5rem 0;
-  line-height: 1.6;
+.purchased-badge {
+  background-color: forestgreen;
+  color: white;
+  font-size: 0.9rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.not-purchased-badge {
+  background-color: #f7c948;
+  color: #3a3000;
+  font-size: 0.9rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
 }
 
 .error {
   color: #b00020;
+  background-color: #fdecea;
+  padding: 0.75rem;
+  border-left: 4px solid #b00020;
+  border-radius: 6px;
   font-weight: bold;
-  font-size: 1rem;
-  margin-top: 1rem;
+  text-align: center;
+  width: 100%;
+}
+
+.purchase-message {
+  font-size: 0.95rem;
+  color: #333;
+  background-color: #f2f2f2;
+  padding: 0.6rem 1rem;
+  border-left: 4px solid #ccc;
+  border-radius: 6px;
+  font-style: italic;
+  text-align: center;
+}
+
+.purchase-button {
+  width: 12rem;
+  display: block;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .book-info {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .cover {
+    width: 100%;
+    max-width: 350px;
+    height: auto;
+  }
+
+  .book-meta {
+    width: 100%;
+  }
+
+  .book-title {
+    font-size: 1.6rem;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .purchase-button {
+    width: 100%;
+  }
 }

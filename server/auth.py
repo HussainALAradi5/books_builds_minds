@@ -277,7 +277,6 @@ def add_review(slug):
             "Unauthorized: You can only review books you have purchased", 403
         )
 
-    # 👇 NEW: Prevent duplicate review for this book
     existing_review = Review.query.filter_by(
         user_id=user_id, book_id=book.book_id
     ).first()
@@ -285,7 +284,12 @@ def add_review(slug):
         return error_response("You have already reviewed this book", 400)
 
     data = request.json
-    rating = data.get("rating")
+    try:
+        rating = int(data.get("rating"))
+    except (TypeError, ValueError):
+        return error_response(
+            "Invalid rating format. Must be an integer between 0 and 5", 400
+        )
     comment_text = data.get("comment")
 
     if rating is None or not (0 <= rating <= 5):
@@ -331,7 +335,12 @@ def edit_review(review_id):
         return error_response("Unauthorized: You can only edit your own reviews", 403)
 
     data = request.json
-    rating = data.get("rating")
+    try:
+        rating = int(data.get("rating"))
+    except (TypeError, ValueError):
+        return error_response(
+            "Invalid rating format. Must be an integer between 0 and 5", 400
+        )
     comment_text = data.get("comment")
 
     if rating is not None and not (0 <= rating <= 5):

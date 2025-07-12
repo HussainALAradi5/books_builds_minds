@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { fetchAllBooks } from "../../service/auth";
 import Card from "../Components/Card";
-import Search from "../Components/Search";
+import Header from "../Components/Header"; 
 import "../styles/home.css";
 
 const HomePage = () => {
@@ -18,17 +18,18 @@ const HomePage = () => {
   }, []);
 
   return (
-    <div className="homepage">
-      <Search books={books} setFilteredBooks={setFilteredBooks} />
-
-      {filteredBooks.length > 0 ? (
-        filteredBooks.map((book, index) => (
-          <Card key={index} type="book" data={book} />
-        ))
-      ) : (
-        <p>No matching books found.</p>
-      )}
-    </div>
+    <>
+      <Header books={books} setFilteredBooks={setFilteredBooks} />{" "}
+      <div className="homepage">
+        {filteredBooks.length > 0 ? (
+          filteredBooks.map((book, index) => (
+            <Card key={index} type="book" data={book} />
+          ))
+        ) : (
+          <p>No matching books found.</p>
+        )}
+      </div>
+    </>
   );
 };
 

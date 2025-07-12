@@ -13,7 +13,7 @@ const ProfilePage = () => {
     const token = localStorage.getItem("token");
 
     if (!userId || !token) {
-      navigate("/"); // 🚨 redirect to homepage if not logged in
+      navigate("/"); 
       return;
     }
 
