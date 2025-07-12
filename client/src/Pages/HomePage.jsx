@@ -14,13 +14,17 @@ const HomePage = () => {
         const userId = localStorage.getItem("user_id");
 
         const booksData = await fetchAllBooks();
-        const purchasedData = await fetchPurchasedBooks(userId);
 
-        const purchasedBooks = Array.isArray(purchasedData)
-          ? purchasedData
-          : purchasedData.books || [];
+        let purchasedSlugs = [];
 
-        const purchasedSlugs = purchasedBooks.map((book) => book.slug);
+        if (userId) {
+          const purchasedData = await fetchPurchasedBooks(userId);
+          const purchasedBooks = Array.isArray(purchasedData)
+            ? purchasedData
+            : purchasedData.books || [];
+
+          purchasedSlugs = purchasedBooks.map((book) => book.slug);
+        }
 
         const booksWithStatus = booksData.map((book) => ({
           ...book,
