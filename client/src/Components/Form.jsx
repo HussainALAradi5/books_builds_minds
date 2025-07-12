@@ -5,13 +5,20 @@ import {
   registerUser,
   addBook,
   addReview,
+  editReview,
 } from "../../service/auth";
+
 import AuthForm from "./AuthForm";
 import BookForm from "./BookForm";
 import ReviewForm from "./ReviewForm";
 import "../styles/form.css";
 
-const Form = ({ mode = "login", onSubmit, isEditing = false }) => {
+const Form = ({
+  mode = "login",
+  onSubmit,
+  isEditing = false,
+  initialData = null,
+}) => {
   const navigate = useNavigate();
   const isLogin = mode === "login";
   const isRegister = mode === "register";
@@ -19,7 +26,9 @@ const Form = ({ mode = "login", onSubmit, isEditing = false }) => {
   const isAddReview = mode === "add-review";
 
   const [formData, setFormData] = useState(
-    isAddBook
+    initialData && isAddReview
+      ? { ...initialData }
+      : isAddBook
       ? {
           isbn: "",
           book_image: "",
@@ -30,16 +39,8 @@ const Form = ({ mode = "login", onSubmit, isEditing = false }) => {
           price: "",
         }
       : isAddReview
-      ? {
-          rating: 0,
-          comment: "",
-        }
-      : {
-          identifier: "",
-          username: "",
-          email: "",
-          password: "",
-        }
+      ? { rating: 0, comment: "" }
+      : { identifier: "", username: "", email: "", password: "" }
   );
 
   const [errorMessage, setErrorMessage] = useState("");
@@ -56,7 +57,7 @@ const Form = ({ mode = "login", onSubmit, isEditing = false }) => {
     const missingFields = [];
 
     if (isAddBook) {
-      const required = [
+      const requiredFields = [
         "isbn",
         "title",
         "author",
@@ -64,7 +65,7 @@ const Form = ({ mode = "login", onSubmit, isEditing = false }) => {
         "published_at",
         "price",
       ];
-      required.forEach((key) => {
+      requiredFields.forEach((key) => {
         if (!formData[key]) missingFields.push(key.replace(/_/g, " "));
       });
       if (formData.price && parseFloat(formData.price) < 1) {
@@ -85,7 +86,7 @@ const Form = ({ mode = "login", onSubmit, isEditing = false }) => {
         missingFields.push("valid rating (0–5)");
       }
       if (!formData.comment || formData.comment.trim().length < 10) {
-        missingFields.push("valid comment (min 10 chars)");
+        missingFields.push("valid comment (min 10 characters)");
       }
     }
 
@@ -105,6 +106,7 @@ const Form = ({ mode = "login", onSubmit, isEditing = false }) => {
         localStorage.setItem("is_admin", result.profile.is_admin);
         onSubmit?.(result.profile);
         setSuccessMessage(result.message || "Login successful");
+
         setTimeout(() => {
           navigate("/profile");
           window.location.reload();
@@ -136,8 +138,16 @@ const Form = ({ mode = "login", onSubmit, isEditing = false }) => {
         onSubmit?.(result);
       } else if (isAddReview) {
         const slug = localStorage.getItem("review_slug");
-        const result = await addReview(slug, formData);
-        setSuccessMessage(result.message || "Review submitted");
+
+        let result;
+        if (isEditing && initialData?.review_id) {
+          result = await editReview(slug, initialData.review_id, formData);
+          setSuccessMessage(result.message || "Review updated successfully");
+        } else {
+          result = await addReview(slug, formData);
+          setSuccessMessage(result.message || "Review submitted successfully");
+        }
+
         setFormData({ rating: 0, comment: "" });
         onSubmit?.(result);
       }

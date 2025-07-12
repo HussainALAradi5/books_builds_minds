@@ -11,9 +11,11 @@ const ReviewForm = ({ formData, handleChange, isEditing, onSubmit }) => {
         name="rating"
         min="0"
         max="5"
+        step="0.5"
         value={formData.rating}
         onChange={handleChange}
         placeholder="Rating (0–5)"
+        required
       />
 
       <textarea
@@ -22,6 +24,7 @@ const ReviewForm = ({ formData, handleChange, isEditing, onSubmit }) => {
         onChange={handleChange}
         placeholder="Your comment..."
         rows={5}
+        required
       />
 
       <div className="form-actions">

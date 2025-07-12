@@ -98,7 +98,7 @@
   border-radius: 12px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   width: 100%;
-  max-width: 480px;
+  max-width: 500px;
   z-index: 10;
   animation: fadeInScale 0.3s ease;
 }
@@ -119,4 +119,55 @@
   font-size: 1.4rem;
   color: #333;
   text-align: center;
+}
+
+.popup-panel form h2 {
+  font-size: 1.6rem;
+  margin-bottom: 1rem;
+  color: midnightblue;
+  text-align: center;
+}
+
+.popup-panel input[type="number"],
+.popup-panel textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  margin-bottom: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.popup-panel input[type="number"]:focus,
+.popup-panel textarea:focus {
+  border-color: royalblue;
+  outline: none;
+}
+
+.popup-panel textarea {
+  resize: vertical;
+  min-height: 100px;
+  background-color: #fdfdfd;
+}
+
+@media (max-width: 600px) {
+  .popup-panel {
+    max-width: 90%;
+    padding: 1.5rem;
+  }
+
+  .review-wrapper {
+    padding: 1rem;
+  }
+
+  .review-box {
+    padding: 0.8rem;
+  }
+
+  .form-button {
+    padding: 10px 20px;
+    font-size: 0.95rem;
+  }
 }

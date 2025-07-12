@@ -7,11 +7,11 @@ const Review = ({ slug, hasPurchased }) => {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
   const [showFormPopup, setShowFormPopup] = useState(false);
   const [showConfirmPopup, setShowConfirmPopup] = useState(false);
   const [countdown, setCountdown] = useState(5);
   const [targetReviewId, setTargetReviewId] = useState(null);
+  const [editingReviewData, setEditingReviewData] = useState(null);
 
   const currentUserId = localStorage.getItem("user_id");
   const userHasReviewed = reviews.some((r) => r.user_id == currentUserId);
@@ -30,6 +30,7 @@ const Review = ({ slug, hasPurchased }) => {
 
   const handleReviewSubmitted = () => {
     setShowFormPopup(false);
+    setEditingReviewData(null);
     fetchReviews();
   };
 
@@ -79,7 +80,10 @@ const Review = ({ slug, hasPurchased }) => {
                     <Button
                       text="Edit"
                       className="form-button"
-                      onClick={() => setShowFormPopup(true)}
+                      onClick={() => {
+                        setEditingReviewData(review);
+                        setShowFormPopup(true);
+                      }}
                     />
                     <Button
                       text="Delete"
@@ -107,30 +111,39 @@ const Review = ({ slug, hasPurchased }) => {
         />
       )}
 
-      {hasPurchased && userHasReviewed && !showFormPopup && (
-        <p className="review-warning">You've already reviewed this book.</p>
-      )}
+      {hasPurchased &&
+        userHasReviewed &&
+        !showFormPopup &&
+        !editingReviewData && (
+          <p className="review-warning">You've already reviewed this book.</p>
+        )}
 
-      {/* Add/Edit Popup */}
       {showFormPopup && (
         <>
           <div
             className="popup-backdrop"
-            onClick={() => setShowFormPopup(false)}
-          ></div>
+            onClick={() => {
+              setShowFormPopup(false);
+              setEditingReviewData(null);
+            }}
+          />
           <div className="popup-panel">
-            <Form mode="add-review" onSubmit={handleReviewSubmitted} />
+            <Form
+              mode="add-review"
+              isEditing={Boolean(editingReviewData)}
+              initialData={editingReviewData}
+              onSubmit={handleReviewSubmitted}
+            />
           </div>
         </>
       )}
 
-      {/* Delete Confirmation Popup */}
       {showConfirmPopup && (
         <>
           <div
             className="popup-backdrop"
             onClick={() => setShowConfirmPopup(false)}
-          ></div>
+          />
           <div className="popup-panel">
             <h3>Are you sure you want to delete this review?</h3>
             <p>
