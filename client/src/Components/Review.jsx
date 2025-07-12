@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Form from "./Form";
 import Button from "./Button";
 import { fetchBookReviews, deleteReview } from "../../service/auth";
+import { FaEdit, FaRegEdit, FaTrash, FaTrashAlt } from "react-icons/fa";
 
 const Review = ({ slug, hasPurchased }) => {
   const [reviews, setReviews] = useState([]);
@@ -12,6 +13,8 @@ const Review = ({ slug, hasPurchased }) => {
   const [countdown, setCountdown] = useState(5);
   const [targetReviewId, setTargetReviewId] = useState(null);
   const [editingReviewData, setEditingReviewData] = useState(null);
+  const [hoverTrash, setHoverTrash] = useState(false);
+  const [hoverEdit, setHoverEdit] = useState(false);
 
   const currentUserId = localStorage.getItem("user_id");
   const userHasReviewed = reviews.some((r) => r.user_id == currentUserId);
@@ -81,22 +84,28 @@ const Review = ({ slug, hasPurchased }) => {
                 <p className="review-comment">{review.comment}</p>
                 {isOwner && (
                   <div className="form-actions">
-                    <Button
-                      text="Edit"
-                      className="form-button"
+                    <button
+                      className="icon-button edit-icon"
                       onClick={() => {
                         setEditingReviewData(review);
                         setShowFormPopup(true);
                       }}
-                    />
-                    <Button
-                      text="Delete"
-                      className="form-button"
+                      onMouseEnter={() => setHoverEdit(true)}
+                      onMouseLeave={() => setHoverEdit(false)}
+                    >
+                      {hoverEdit ? <FaRegEdit /> : <FaEdit />}
+                    </button>
+                    <button
+                      className="icon-button delete-icon"
                       onClick={() => {
                         setTargetReviewId(review.review_id);
                         setShowConfirmPopup(true);
                       }}
-                    />
+                      onMouseEnter={() => setHoverTrash(true)}
+                      onMouseLeave={() => setHoverTrash(false)}
+                    >
+                      {hoverTrash ? <FaTrashAlt /> : <FaTrash />}
+                    </button>
                   </div>
                 )}
               </div>
@@ -153,7 +162,6 @@ const Review = ({ slug, hasPurchased }) => {
                 className="form-button"
                 onClick={handleDelete}
               />
-
               <Button
                 text="Cancel"
                 className="form-button"
