@@ -1,0 +1,37 @@
+.star-rating-container {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.star-wrapper {
+  position: relative;
+  width: 1.4rem;
+  height: 1.4rem;
+  font-size: 1.4rem;
+  line-height: 0;
+}
+
+.star-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: #ccc;
+  z-index: 1;
+}
+
+.star-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: gold;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.rating-value {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #444;
+  margin-left: 0.3rem;
+}

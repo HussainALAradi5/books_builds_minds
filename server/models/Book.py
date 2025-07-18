@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, String, Date, Float, ForeignKey, Table
 from sqlalchemy.orm import relationship
 from config import db
 
+# Association table for many-to-many relationship
 purchased_books_table = db.Table(
     "purchased_books",
     db.Column("user_id", Integer, ForeignKey("user.user_id")),
@@ -31,6 +32,13 @@ class Book(db.Model):
         "Review", back_populates="book", cascade="all, delete-orphan"
     )
 
+    @property
+    def average_rating(self):
+        if not self.reviews:
+            return 0.0
+        avg = sum(review.rating for review in self.reviews) / len(self.reviews)
+        return round(avg, 2)
+
     def to_dict(self):
         return {
             "book_id": self.book_id,
@@ -42,6 +50,7 @@ class Book(db.Model):
             "publisher": self.publisher,
             "published_at": str(self.published_at),
             "price": self.price,
+            "average_rating": self.average_rating,  # ✅ Added field
             "reviews": [review.to_dict() for review in self.reviews],
             "added_by_user_id": self.added_by_user_id,
             "purchased_by": [user.user_id for user in self.purchased_by_users],
