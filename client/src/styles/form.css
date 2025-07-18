@@ -159,6 +159,10 @@
   justify-content: center;
   margin-top: 1rem;
 }
+.form-actions:only-child,
+.form-actions:has(:only-child) {
+  justify-content: center;
+}
 
 .form-actions {
   display: flex;
