@@ -1,5 +1,6 @@
 # app.py
-from flask import jsonify, request
+from flask import jsonify, request, make_response, send_file
+
 from config import app, db
 from models.User import User
 from upload import upload_book_image
@@ -20,6 +21,7 @@ from auth import (
     get_book_reviews,
     edit_review,
     delete_review,
+    fetch_receipt,
 )
 
 with app.app_context():
@@ -89,6 +91,11 @@ def remove_review(slug, review_id):
 @app.route("/book/<string:slug>/review/", methods=["GET"])
 def fetch_book_reviews(slug):
     return get_book_reviews(slug)
+
+
+@app.route("/book/<string:slug>/receipt/", methods=["GET"])
+def print_receipt(slug):
+    return fetch_receipt(slug)
 
 
 @app.route("/admin-requests", methods=["GET"])

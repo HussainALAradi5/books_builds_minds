@@ -1,4 +1,6 @@
-from flask import jsonify, request
+from flask import jsonify, request, send_file, make_response
+from io import BytesIO
+from reportlab.pdfgen import canvas
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 import jwt
@@ -9,6 +11,7 @@ from models.Receipt import Receipt
 from models.AdminRequest import AdminRequest
 from config import app, db
 from slugify import slugify
+import os
 
 SECRET_KEY = app.config["JWT_SECRET_KEY"]
 
@@ -101,7 +104,7 @@ def edit_user(user_id):
     token = request.headers.get("Authorization")
     user_id_from_token = validate_token(token)
     if not user_id_from_token:
-        return error_response("Invalid or missing token", 401)
+        return error_response("UnAuthories Access", 401)
     if user_id != user_id_from_token:
         return error_response("Unauthorized: You can only edit your own profile", 403)
     user = User.query.get(user_id)
@@ -146,7 +149,7 @@ def user_details(user_id):
     token = request.headers.get("Authorization")
     user_id_from_token = validate_token(token)
     if not user_id_from_token:
-        return jsonify({"error": "Invalid or missing token"}), 401
+        return jsonify({"error": "UnAuthories Access"}), 401
     if user_id != user_id_from_token:
         return jsonify({"error": "Unauthorized access"}), 403
     user = User.query.get(user_id)
@@ -159,7 +162,7 @@ def add_book():
     token = request.headers.get("Authorization")
     user_id = validate_token(token)
     if not user_id:
-        return error_response("Invalid or missing token", 401)
+        return error_response("UnAuthories Access", 401)
     user = User.query.get(user_id)
     if not user.is_admin:
         return error_response("Unauthorized: Only admins can add books", 403)
@@ -242,7 +245,7 @@ def get_purchased_books(user_id):
     token = request.headers.get("Authorization")
     user_id_from_token = validate_token(token)
     if not user_id_from_token:
-        return error_response("Invalid or missing token", 401)
+        return error_response("UnAuthories Access", 401)
     if user_id != user_id_from_token:
         return error_response(
             "Unauthorized: You can only view your own purchased books", 403
@@ -267,7 +270,7 @@ def add_review(slug):
     user_id = validate_token(token)
 
     if not user_id:
-        return error_response("Invalid or missing token", 401)
+        return error_response("UnAuthories Access", 401)
 
     user = User.query.get(user_id)
     book = Book.query.filter_by(slug=slug).first()
@@ -290,9 +293,7 @@ def add_review(slug):
     try:
         rating = data.get("rating")
     except (TypeError, ValueError):
-        return error_response(
-            "Invalid rating format. Must be  between 0 and 5", 400
-        )
+        return error_response("Invalid rating format. Must be  between 0 and 5", 400)
     comment_text = data.get("comment")
 
     if rating is None or not (0 <= rating <= 5):
@@ -327,7 +328,7 @@ def edit_review(review_id):
     user_id = validate_token(token)
 
     if not user_id:
-        return error_response("Invalid or missing token", 401)
+        return error_response("UnAuthories Access", 401)
 
     review = Review.query.get(review_id)
 
@@ -376,7 +377,7 @@ def delete_review(review_id):
     user_id = validate_token(token)
 
     if not user_id:
-        return error_response("Invalid or missing token", 401)
+        return error_response("UnAuthories Access", 401)
 
     review = Review.query.get(review_id)
 
@@ -404,11 +405,51 @@ def get_book_reviews(slug):
     )
 
 
+def fetch_receipt(slug):
+    token = request.args.get("token")  
+    user_id = validate_token(token)
+    if not user_id:
+        return error_response("Unauthorized Access", 401)
+
+    book = Book.query.filter_by(slug=slug).first()
+    if not book:
+        return error_response("Book not found", 404)
+
+    receipt = Receipt.query.filter_by(user_id=user_id, book_id=book.book_id).first()
+    if not receipt:
+        return error_response("You have not purchased this book", 403)
+
+    buffer = BytesIO()
+    pdf = canvas.Canvas(buffer)
+    pdf.drawString(100, 800, "📚 Receipt for Book Purchase")
+    pdf.drawString(100, 780, f"Title: {book.title}")
+    pdf.drawString(100, 780, f"Cover: {book.book_image}")
+    pdf.drawString(100, 760, f"Author: {book.author}")
+    pdf.drawString(100, 740, f"Purchased by: User  {user_id}")
+    pdf.drawString(100, 720, f"Receipt ID: {receipt.receipt_id}")
+    pdf.drawString(100, 700, f"Date: {receipt.written_time.strftime('%Y-%m-%d')}")
+    pdf.showPage()
+    pdf.save()
+    buffer.seek(0)
+
+    response = make_response(
+        send_file(
+            buffer,
+            as_attachment=True,
+            download_name="receipt.pdf",
+            mimetype="application/pdf",
+        )
+    )
+    client_url = os.environ.get("CLIENT_SIDE_URL")
+    response.headers["Access-Control-Allow-Origin"] = client_url
+    return response
+
+
 def get_admin_requests():
     token = request.headers.get("Authorization")
     user_id = validate_token(token)
     if not user_id:
-        return error_response("Invalid or missing token", 401)
+        return error_response("UnAuthories Access", 401)
     user = User.query.get(user_id)
     if not user or not user.is_admin:
         return error_response("Unauthorized: Only admins can view admin requests", 403)
@@ -427,7 +468,7 @@ def submit_admin_request():
     user_id = validate_token(token)
 
     if not user_id:
-        return error_response("Invalid or missing token", 401)
+        return error_response("UnAuthories Access", 401)
 
     user = User.query.get(user_id)
     if not user or not user.is_active or user.is_admin:
@@ -468,7 +509,7 @@ def review_admin_request(request_id):
     user_id = validate_token(token)
 
     if not user_id:
-        return error_response("Invalid or missing token", 401)
+        return error_response("UnAuthories Access", 401)
 
     user = User.query.get(user_id)
     if not user or not user.is_admin:

@@ -4,6 +4,7 @@ import {
   fetchBookSlug,
   fetchPurchasedBooks,
   isUserLoggedIn,
+  downloadReceipt,
 } from "../../../service/auth";
 import "../../styles/book.css";
 import "../../styles/button.css";
@@ -63,6 +64,14 @@ const BookPage = () => {
     }
   };
 
+  const handleDownloadReceipt = () => {
+    try {
+      downloadReceipt(slug);
+    } catch {
+      alert("Unable to download receipt. Please log in.");
+    }
+  };
+
   return (
     <div className="book-page">
       <div className="book-details-container">
@@ -74,6 +83,19 @@ const BookPage = () => {
           ) : book ? (
             <>
               <BookDetails book={book} hasPurchased={hasPurchased} />
+
+              {isUserLoggedIn() && hasPurchased && (
+                <Button
+                  text={
+                    <>
+                      <i className="fas fa-file-download"></i> Download Receipt
+                      (PDF)
+                    </>
+                  }
+                  onClick={handleDownloadReceipt}
+                  className="purchase-button"
+                />
+              )}
 
               {isUserLoggedIn() && !hasPurchased && (
                 <Button

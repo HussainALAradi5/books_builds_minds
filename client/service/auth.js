@@ -130,6 +130,17 @@ const editReview = async (slug, review_id, updatedData) =>
 const deleteReview = async (slug, review_id) =>
   fetchWithAuth(`${API_URL}/book/${slug}/review/${review_id}`, "DELETE");
 
+const downloadReceipt = (slug) => {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    throw new Error("Missing authentication token.");
+  }
+  const receiptURL = `${API_URL}/book/${slug}/receipt?token=${encodeURIComponent(token)}`;
+
+  window.open(receiptURL, "_blank", "noopener,noreferrer");
+};
+
 export {
   registerUser,
   loginUser,
@@ -144,5 +155,6 @@ export {
   addReview,
   editReview,
   deleteReview,
-  isUserLoggedIn, 
+  isUserLoggedIn,
+  downloadReceipt,
 };
