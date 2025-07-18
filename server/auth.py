@@ -406,32 +406,38 @@ def get_book_reviews(slug):
 
 
 def fetch_receipt(slug):
-    token = request.args.get("token")  
+    token = request.args.get("token")
     user_id = validate_token(token)
     if not user_id:
         return error_response("Unauthorized Access", 401)
-
     book = Book.query.filter_by(slug=slug).first()
     if not book:
         return error_response("Book not found", 404)
-
     receipt = Receipt.query.filter_by(user_id=user_id, book_id=book.book_id).first()
     if not receipt:
         return error_response("You have not purchased this book", 403)
-
+    user = User.query.get(user_id)
     buffer = BytesIO()
     pdf = canvas.Canvas(buffer)
     pdf.drawString(100, 800, "📚 Receipt for Book Purchase")
     pdf.drawString(100, 780, f"Title: {book.title}")
-    pdf.drawString(100, 780, f"Cover: {book.book_image}")
-    pdf.drawString(100, 760, f"Author: {book.author}")
-    pdf.drawString(100, 740, f"Purchased by: User  {user_id}")
-    pdf.drawString(100, 720, f"Receipt ID: {receipt.receipt_id}")
-    pdf.drawString(100, 700, f"Date: {receipt.written_time.strftime('%Y-%m-%d')}")
+    try:
+        if book.book_image.startswith("http"):
+            image_response = requests.get(book.book_image, timeout=5)
+            image_data = BytesIO(image_response.content)
+            image = ImageReader(image_data)
+        else:
+            image = ImageReader(book.book_image)
+        pdf.drawImage(image, 100, 610, width=120, height=160)
+    except Exception:
+        pdf.drawString(100, 760, "[Cover image not available]")
+    pdf.drawString(100, 550, f"Receipt ID: {receipt.receipt_id}")
+    pdf.drawString(100, 590, f"Author: {book.author}")
+    pdf.drawString(100, 570, f"Purchased by: {user.user_name}")
+    pdf.drawString(100, 530, f"Date: {receipt.written_time.strftime('%Y-%m-%d')}")
     pdf.showPage()
     pdf.save()
     buffer.seek(0)
-
     response = make_response(
         send_file(
             buffer,
@@ -440,8 +446,10 @@ def fetch_receipt(slug):
             mimetype="application/pdf",
         )
     )
+
     client_url = os.environ.get("CLIENT_SIDE_URL")
     response.headers["Access-Control-Allow-Origin"] = client_url
+
     return response
 
 
