@@ -40,7 +40,7 @@
 }
 
 .header-button:active {
-  transform: scale(0.96);
+  transform: scale(0.7);
 }
 
 .search-trigger-button {
@@ -65,7 +65,7 @@
 }
 
 .search-trigger-button:active {
-  transform: scale(0.96);
+  transform: scale(0.7);
 }
 
 .form-button {
@@ -109,7 +109,7 @@
 }
 
 .purchase-button:active {
-  transform: scale(0.96);
+  transform: scale(0.70);
 }
 
 .button:disabled,
