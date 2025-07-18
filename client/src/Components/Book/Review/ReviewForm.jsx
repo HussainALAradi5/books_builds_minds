@@ -1,5 +1,5 @@
-import Button from "./Button";
-import "../styles/form.css";
+import "../../../styles/form.css";
+import Button from "../../Button";
 
 const ReviewForm = ({ formData, handleChange, isEditing, onSubmit }) => {
   return (

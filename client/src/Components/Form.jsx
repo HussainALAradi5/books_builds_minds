@@ -8,10 +8,10 @@ import {
   editReview,
 } from "../../service/auth";
 
-import AuthForm from "./AuthForm";
-import BookForm from "./BookForm";
-import ReviewForm from "./ReviewForm";
+import AuthForm from "./User/Auth/AuthForm";
 import "../styles/form.css";
+import BookForm from "./Book/BookForm";
+import ReviewForm from "./Book/Review/ReviewForm";
 
 const Form = ({
   mode = "login",

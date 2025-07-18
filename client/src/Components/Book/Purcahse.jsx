@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Button from "./Button";
-import { purchaseBook, fetchPurchasedBooks } from "../../service/auth";
+import { purchaseBook, fetchPurchasedBooks } from "../../../service/auth";
+import Button from "../Button";
 
 const Purchase = ({ slug }) => {
   const user_id = localStorage.getItem("user_id");

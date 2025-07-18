@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { fetchUserProfile } from "../../service/auth";
-import Card from "../Components/Card";
-import "../styles/profile.css";
+import { fetchUserProfile } from "../../../service/auth";
+import Card from "../../Components/Card";
+import "../../styles/profile.css";
 
 const ProfilePage = () => {
   const [userData, setUserData] = useState(null);
@@ -13,7 +13,7 @@ const ProfilePage = () => {
     const token = localStorage.getItem("token");
 
     if (!userId || !token) {
-      navigate("/"); 
+      navigate("/");
       return;
     }
 

@@ -1,13 +1,13 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HomePage from "../Pages/HomePage";
-import LoginPage from "../Pages/LoginPage";
-import RegisterPage from "../Pages/RegisterPage";
-import ProfilePage from "../Pages/ProfilePage";
-import AdminPanelPage from "../Pages/AdminPanelPage";
-import BookPage from "../Pages/BookPage";
-import ReviewPage from "../Pages/ReviewPage";
+import LoginPage from "../Pages/User/LoginPage";
+import RegisterPage from "../Pages/User/RegisterPage";
+import ProfilePage from "../Pages/User/ProfilePage";
+import AdminPanelPage from "../Pages/User/AdminPanelPage";
+import ReviewPage from "../Pages/Book/Review/ReviewPage";
 import Header from "./Header";
 import Footer from "./Footer";
+import BookPage from "../Pages/Book/BookPage";
 
 const MainContainer = () => {
   return (

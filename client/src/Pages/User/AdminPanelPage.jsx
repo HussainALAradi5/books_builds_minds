@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { fetchUserProfile } from "../../service/auth";
-import AdminPanel from "../Components/AdminPanel";
-import "../styles/admin.css";
+import { fetchUserProfile } from "../../../service/auth";
+import "../../styles/admin.css";
+import AdminPanel from "../../Components/User/Admin/AdminPanel";
 
 const AdminPanelPage = () => {
   const [userData, setUserData] = useState(null);
@@ -13,7 +13,7 @@ const AdminPanelPage = () => {
     const token = localStorage.getItem("token");
 
     if (!userId || !token) {
-      navigate("/"); 
+      navigate("/");
       return;
     }
 

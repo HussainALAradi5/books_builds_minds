@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
-import Review from "../Components/Review";
-import "../styles/review.css";
+import Review from "../../../Components/Book/Review/Review";
+import "../../../styles/review.css";
 
 const ReviewPage = () => {
   const { slug } = useParams();

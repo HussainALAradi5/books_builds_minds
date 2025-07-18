@@ -4,12 +4,12 @@ import {
   fetchBookSlug,
   fetchPurchasedBooks,
   isUserLoggedIn,
-} from "../../service/auth";
-import BookDetails from "../Components/BookDetails";
-import Review from "../Components/Review";
-import Button from "../Components/Button";
-import "../styles/book.css";
-import "../styles/button.css";
+} from "../../../service/auth";
+import "../../styles/book.css";
+import "../../styles/button.css";
+import Review from "../../Components/Book/Review/Review";
+import BookDetails from "../../Components/Book/BookDetails";
+import Button from "../../Components/Button";
 
 const BookPage = () => {
   const { slug } = useParams();

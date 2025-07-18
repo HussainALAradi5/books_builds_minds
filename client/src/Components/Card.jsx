@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchUserProfile } from "../../service/auth";
-import UserDetails from "./UserDetails";
-import BookDetails from "./BookDetails";
 import "../styles/card.css";
+import BookDetails from "./Book/BookDetails";
+import UserDetails from "./User/Profile/UserDetails";
 
 const Card = ({ type, data }) => {
   const [userData, setUserData] = useState(data || null);

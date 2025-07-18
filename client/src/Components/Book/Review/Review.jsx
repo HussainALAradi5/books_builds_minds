@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import Form from "./Form";
-import Button from "./Button";
 import ReviewOperations from "./ReviewOperations";
-import { fetchBookReviews, deleteReview } from "../../service/auth";
-import ReviewPopup from "./ReviewPopUp";
+import { fetchBookReviews, deleteReview } from "../../../../service/auth";
+import Form from "../../Form";
+import ReviewPopup from "./ReviewPopup";
+import Button from "../../Button";
 
 const Review = ({ slug, hasPurchased }) => {
   const [reviews, setReviews] = useState([]);

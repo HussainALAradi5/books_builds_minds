@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { FaSearch } from "react-icons/fa";
-import "../styles/form.css";
-import "../styles/button.css";
-import Button from "./Button";
+import "../../styles/form.css";
+import "../../styles/button.css";
+import Button from "../Button";
 import SearchForm from "./SearchForm";
 import {
   normalize,
   matchExact,
   matchPrice,
   clearedFields,
-} from "../utilities/searchUtils";
+} from "../../utilities/searchUtils";
 
 const Search = ({ books, setFilteredBooks }) => {
   const [formData, setFormData] = useState({ ...clearedFields });

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Form from "../Components/Form";
-import Button from "../Components/Button";
+import Form from "../../Form";
+import Button from "../../Button";
 
 const AdminPanel = () => {
   const [showAddForm, setShowAddForm] = useState(false);

@@ -1,5 +1,5 @@
-import Button from "./Button";
-import "../styles/form.css";
+import Button from "../Button";
+import "../../styles/form.css";
 
 const SearchForm = ({
   formData,

@@ -1,6 +1,6 @@
 import "../styles/header.css";
 import Button from "./Button";
-import Search from "./Search";
+import Search from "./Search/Search";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 

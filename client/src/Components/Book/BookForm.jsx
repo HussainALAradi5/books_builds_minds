@@ -1,5 +1,5 @@
-import "../styles/form.css";
-import Button from "./Button"; // Adjust path if needed
+import Button from "../Button";
+import "../../styles/form.css";
 
 const BookForm = ({ formData, handleChange, onSubmit }) => {
   return (

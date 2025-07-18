@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { fetchUserProfile } from "../../service/auth";
+import { fetchUserProfile } from "../../../../service/auth";
 
 const ProfileDetails = () => {
   const [user, setUser] = useState(null);

@@ -1,7 +1,7 @@
-import "../styles/book.css";
-import formatPublishedDate from "../utilities/formatDate";
+import "../../styles/book.css";
+import formatPublishedDate from "../../utilities/formatDate";
 import { FaCheck, FaTimesCircle } from "react-icons/fa";
-import { isUserLoggedIn } from "../../service/auth";
+import { isUserLoggedIn } from "../../../service/auth";
 
 const BookDetails = ({ book, hasPurchased }) => {
   const publishAt = formatPublishedDate(book.published_at);
