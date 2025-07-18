@@ -2,7 +2,8 @@ import "../../styles/book.css";
 import formatPublishedDate from "../../utilities/formatDate";
 import { FaCheck, FaTimesCircle } from "react-icons/fa";
 import { isUserLoggedIn } from "../../../service/auth";
-import StarRating from "./Review/StarRating";
+import StarRating from "./Review/Star/StarRating";
+
 const BookDetails = ({ book, hasPurchased }) => {
   const publishAt = formatPublishedDate(book.published_at);
   const isLoggedIn = isUserLoggedIn();
@@ -39,10 +40,11 @@ const BookDetails = ({ book, hasPurchased }) => {
         <p>
           <strong>Price:</strong> {book.price} BHD
         </p>
-        <p>
-          <strong>Average Rating:</strong>{" "}
+
+        <div className="average-rating">
+          <strong>Average Rating:</strong>
           <StarRating rating={book.average_rating} />
-        </p>
+        </div>
       </div>
     </div>
   );

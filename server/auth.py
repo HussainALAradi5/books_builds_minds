@@ -288,10 +288,10 @@ def add_review(slug):
 
     data = request.json
     try:
-        rating = int(data.get("rating"))
+        rating = data.get("rating")
     except (TypeError, ValueError):
         return error_response(
-            "Invalid rating format. Must be an integer between 0 and 5", 400
+            "Invalid rating format. Must be  between 0 and 5", 400
         )
     comment_text = data.get("comment")
 
@@ -339,7 +339,7 @@ def edit_review(review_id):
 
     data = request.json
     try:
-        rating = int(data.get("rating"))
+        rating = data.get("rating")
     except (TypeError, ValueError):
         return error_response(
             "Invalid rating format. Must be an integer between 0 and 5", 400

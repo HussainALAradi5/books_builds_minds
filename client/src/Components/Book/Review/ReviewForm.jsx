@@ -1,22 +1,16 @@
 import "../../../styles/form.css";
 import Button from "../../Button";
+import StarSelector from "./Star/StarSelector";
 
 const ReviewForm = ({ formData, handleChange, isEditing, onSubmit }) => {
   return (
     <form className="review-form" onSubmit={onSubmit}>
       <h2>{isEditing ? "Edit Review" : "Write a Review"}</h2>
 
-      <input
-        type="number"
-        name="rating"
-        min="0"
-        max="5"
-        step="0.5"
-        value={formData.rating}
-        onChange={handleChange}
-        placeholder="Rating (0–5)"
-        required
-      />
+      <label htmlFor="rating">
+        <strong>Select Rating:</strong>
+      </label>
+      <StarSelector rating={formData.rating} onChange={handleChange} />
 
       <textarea
         name="comment"
