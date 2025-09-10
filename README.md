@@ -1,7 +1,5 @@
 # 📖 Books Builds Minds
 
-### 🕒 Created: 30/Sep/2024
-
 👨‍💻 By: Hussain Al Aradi  
 📧 [Gmail](mailto:hussainaradi.ha@gmail.com) | 🐙 [GitHub](https://github.com/HussainALAradi5) | 💼 [LinkedIn](https://www.linkedin.com/in/hussainalaradi/)
 
@@ -189,6 +187,16 @@ Books Builds Minds is designed to be scalable, user-friendly, and visually engag
 ---
 
 ## 🖼️ Screenshots
+
+- authorization:
+
+![image#0](../books_builds_minds/images/screen_01.png.png)
+![image#1](../books_builds_minds/images/authorization.png)
+![image#2](../books_builds_minds/images/authorization_02.png)
+![gust_view](../books_builds_minds/images/gust_view.png)
+![interactive](../books_builds_minds/images/intractive.gif)
+
+![interactive_with_user](../books_builds_minds/images/intractive_with_user.gif)
 
 ### 📸 Showcase: TBA
 
